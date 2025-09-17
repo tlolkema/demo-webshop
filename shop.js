@@ -9,9 +9,14 @@ function getBasket() {
   return basket ? JSON.parse(basket) : [];
 }
 
-function addToBasket(product) {
-  const basket = getBasket();
-  basket.push(product);
+function addToBasket(productKey) {
+  let basket = getBasket();
+  const index = basket.findIndex((item) => item.key === productKey);
+  if (index !== -1) {
+    basket[index].quantity += 1;
+  } else {
+    basket.push({ key: productKey, quantity: 1 });
+  }
   localStorage.setItem("basket", JSON.stringify(basket));
 }
 
@@ -30,11 +35,11 @@ function renderBasket() {
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
     return;
   }
-  basket.forEach((product) => {
-    const item = PRODUCTS[product];
-    if (item) {
+  basket.forEach((item) => {
+    const product = PRODUCTS[item.key];
+    if (product) {
       const li = document.createElement("li");
-      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span>`;
+      li.innerHTML = `<span class='basket-emoji'>${product.emoji}</span> <span>${item.quantity}x ${product.name}</span>`;
       basketList.appendChild(li);
     }
   });
@@ -51,8 +56,10 @@ function renderBasketIndicator() {
     indicator.className = "basket-indicator";
     basketLink.appendChild(indicator);
   }
-  if (basket.length > 0) {
-    indicator.textContent = basket.length;
+  // Show total quantity of all items
+  const totalQuantity = basket.reduce((sum, item) => sum + item.quantity, 0);
+  if (totalQuantity > 0) {
+    indicator.textContent = totalQuantity;
     indicator.style.display = "flex";
   } else {
     indicator.style.display = "none";
