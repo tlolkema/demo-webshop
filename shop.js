@@ -6,12 +6,44 @@ const PRODUCTS = {
 
 function getBasket() {
   const basket = localStorage.getItem("basket");
-  return basket ? JSON.parse(basket) : [];
+  if (!basket) return [];
+
+  const parsedBasket = JSON.parse(basket);
+
+  // Check if this is the old format (array of strings) and migrate it
+  if (parsedBasket.length > 0 && typeof parsedBasket[0] === "string") {
+    // Migrate old format to new format
+    const newBasket = [];
+    const productCounts = {};
+
+    parsedBasket.forEach((product) => {
+      productCounts[product] = (productCounts[product] || 0) + 1;
+    });
+
+    Object.keys(productCounts).forEach((product) => {
+      newBasket.push({ product: product, quantity: productCounts[product] });
+    });
+
+    // Save the migrated basket
+    localStorage.setItem("basket", JSON.stringify(newBasket));
+    return newBasket;
+  }
+
+  return parsedBasket;
 }
 
 function addToBasket(product) {
   const basket = getBasket();
-  basket.push(product);
+  const existingItem = basket.find((item) => item.product === product);
+
+  if (existingItem) {
+    // Increment quantity if product already exists
+    existingItem.quantity += 1;
+  } else {
+    // Add new item with quantity 1
+    basket.push({ product: product, quantity: 1 });
+  }
+
   localStorage.setItem("basket", JSON.stringify(basket));
 }
 
@@ -30,11 +62,11 @@ function renderBasket() {
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
     return;
   }
-  basket.forEach((product) => {
-    const item = PRODUCTS[product];
+  basket.forEach((basketItem) => {
+    const item = PRODUCTS[basketItem.product];
     if (item) {
       const li = document.createElement("li");
-      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span>`;
+      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${basketItem.quantity}x ${item.name}</span>`;
       basketList.appendChild(li);
     }
   });
@@ -51,8 +83,17 @@ function renderBasketIndicator() {
     indicator.className = "basket-indicator";
     basketLink.appendChild(indicator);
   }
-  if (basket.length > 0) {
-    indicator.textContent = basket.length;
+
+  // Calculate total quantity across all items
+  let totalQuantity = 0;
+  if (Array.isArray(basket)) {
+    totalQuantity = basket.reduce((sum, item) => {
+      return sum + (item.quantity || 0);
+    }, 0);
+  }
+
+  if (totalQuantity > 0) {
+    indicator.textContent = totalQuantity;
     indicator.style.display = "flex";
   } else {
     indicator.style.display = "none";
