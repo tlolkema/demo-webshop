@@ -45,7 +45,7 @@ function renderBasketIndicator() {
   const basket = getBasket();
   let indicator = document.querySelector(".basket-indicator");
   if (!indicator) {
-    const basketLink = document.querySelector(".basket-link");
+    const basketLink = document.querySelector(".basket-link"); // get the basket link
     if (!basketLink) return;
     indicator = document.createElement("span");
     indicator.className = "basket-indicator";

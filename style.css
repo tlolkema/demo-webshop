@@ -8,7 +8,8 @@ a {
 }
 a:hover {
   color: #0077ff;
-}
+} // hover effect
+
 body {
   font-family: "Baloo 2", Arial, sans-serif;
   font-size: 1.3rem;
