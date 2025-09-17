@@ -1,0 +1,65 @@
+name: PR Review Workflow
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-review:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Create Workflow Run
+      id: create-run
+      run: |
+        response=$(curl -s -X POST \
+          -H "Content-Type: application/json" \
+          "https://ai-mastra-agent-workshop.vercel.app/api/workflows/prWorkflow/create-run")
+        
+        echo "Create run response: $response"
+        
+        # Extract runId from response
+        runId=$(echo "$response" | jq -r '.runId // .id // .run_id // empty')
+        
+        if [ -z "$runId" ] || [ "$runId" = "null" ]; then
+          echo "Error: Could not extract runId from response"
+          echo "Response: $response"
+          exit 1
+        fi
+        
+        echo "Extracted runId: $runId"
+        echo "runId=$runId" >> $GITHUB_OUTPUT
+
+    - name: Start Workflow Run
+      run: |
+        runId="${{ steps.create-run.outputs.runId }}"
+        prUrl="${{ github.event.pull_request.html_url }}"
+        echo "Starting workflow with runId: $runId"
+        echo "Pull request URL: $prUrl"
+        
+        # Create JSON payload with PR URL
+        payload=$(jq -n \
+          --arg prUrl "$prUrl" \
+          '{
+            "inputData": {
+              "prUrl": $prUrl
+            },
+            "runtimeContext": {}
+          }')
+        
+        echo "Request payload: $payload"
+        
+        response=$(curl -s -X POST \
+          -H "Content-Type: application/json" \
+          -d "$payload" \
+          "https://ai-mastra-agent-workshop.vercel.app/api/workflows/prWorkflow/start?runId=$runId")
+        
+        echo "Start workflow response: $response"
+        
+        # Check if the request was successful
+        if [ $? -eq 0 ]; then
+          echo "Workflow started successfully"
+        else
+          echo "Error: Failed to start workflow"
+          exit 1
+        fi
