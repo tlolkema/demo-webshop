@@ -42,7 +42,7 @@ jobs:
           --arg prUrl "$prUrl" \
           '{
             "inputData": {
-              "prUrl": $prUrl
+              "pullRequestUrl": $prUrl
             },
             "runtimeContext": {}
           }')
