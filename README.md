@@ -2,6 +2,10 @@
 
 A simple fruit shop demo application built with HTML, CSS, and JavaScript. This project serves as a demonstration application for AI agent workshops and testing purposes.
 
+<div align="center">
+  <img src="./img/fruit-shop-logo.jpg" alt="Fruit Shop" width="400" height="auto" />
+</div>
+
 ## Features
 
 - 🍏 **Product Catalog**: Browse fresh fruits (Apple, Banana, Lemon)
@@ -42,7 +46,7 @@ demo-webshop/
 ├── style.css               # Main stylesheet
 ├── shop.js                 # JavaScript functionality
 ├── img/                    # Image assets
-│   ├── fruit-shop-logo.jpg
+│   ├── fruit-shop-logo.png
 │   └── basket-icon.png
 └── README.md               # This file
 ```
