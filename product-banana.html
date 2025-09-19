@@ -11,20 +11,17 @@
       <div class="header-center">
         <a href="index.html" class="logo" aria-label="Go to homepage">
           <img
-            src="img/fruit-shop-logo.webp"
+            src="img/fruit-shop-logo.jpg"
             class="logo-img"
             alt="Fruit Shop Logo"
           />
-          <span class="products-text" style="text-align: center">
-            View Products
-          </span>
+          <span class="products-text"> View Products </span>
         </a>
         <nav role="navigation" aria-label="Main navigation">
           <a
             href="basket.html"
             class="basket-link"
             aria-label="View shopping basket"
-            style="position: relative"
           >
             <img
               src="img/basket-icon.png"
@@ -37,15 +34,13 @@
       </div>
     </header>
     <main id="main-content" role="main">
-      <div class="content-box" style="text-align: center">
-        <div style="font-size: 4rem" role="img" aria-label="Banana emoji">
-          🍌
-        </div>
+      <div class="content-box">
+        <div class="emoji-display" role="img" aria-label="Banana emoji">🍌</div>
         <h1>Banana</h1>
         <div class="product-desc" aria-label="Product description">
           Nature's energy bar. Also, monkeys approve!
         </div>
-        <div style="margin-top: 1.2rem">
+        <div class="button-container">
           <button
             id="addToBasket"
             class="cart-action-btn"
@@ -56,6 +51,15 @@
         </div>
       </div>
     </main>
+    <footer>
+      <a
+        href="https://www.linkedin.com/in/timlolkema/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        By Tim Lolkema
+      </a>
+    </footer>
     <script src="shop.js"></script>
     <script>
       document.getElementById("addToBasket").onclick = function () {

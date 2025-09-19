@@ -12,12 +12,12 @@ a:hover {
 body {
   font-family: "Baloo 2", Arial, sans-serif;
   font-size: 1.3rem;
-  background: #f9f6f1;
+  background: #f8f5e3;
   margin: 0;
   color: #222;
 }
 header {
-  background: #f9f6f1;
+  background: #f8f5e3;
   padding: 1.2rem 2.5rem;
   display: flex;
   align-items: center;
@@ -305,4 +305,51 @@ input[type="text"]:focus {
   border-color: #0077ff;
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 119, 255, 0.1);
+}
+
+body footer {
+  font-size: 1.1rem;
+  color: #d4c9a8;
+}
+
+footer a {
+  font-size: 1.1rem;
+  color: #d4c9a8;
+}
+
+.products-text {
+  text-align: center;
+}
+
+.basket-link {
+  position: relative;
+}
+
+footer {
+  text-align: center;
+  margin-top: 5rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+footer a {
+  text-decoration: none;
+}
+
+.content-box {
+  text-align: center;
+}
+
+.emoji-display {
+  font-size: 4rem;
+}
+
+.button-container {
+  margin-top: 1.2rem;
+}
+
+#successMsg {
+  display: none;
+  color: green;
+  margin-top: 1rem;
 }

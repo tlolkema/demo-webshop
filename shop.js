@@ -5,8 +5,15 @@ const PRODUCTS = {
 };
 
 function getBasket() {
-  const basket = localStorage.getItem("basket");
-  return basket ? JSON.parse(basket) : [];
+  try {
+    const basket = localStorage.getItem("basket");
+    if (!basket) return [];
+    const parsed = JSON.parse(basket);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.warn("Error parsing basket from localStorage:", error);
+    return [];
+  }
 }
 
 function addToBasket(product) {
