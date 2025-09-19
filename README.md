@@ -10,9 +10,6 @@ A simple fruit shop demo application built with HTML, CSS, and JavaScript. This 
 
 - 🍏 **Product Catalog**: Browse fresh fruits (Apple, Banana, Lemon)
 - 🛒 **Shopping Cart**: Add items to basket and manage your order
-- 💳 **Checkout Process**: Complete your purchase with a simple form
-- 📱 **Responsive Design**: Works on desktop and mobile devices
-- 🎨 **Modern UI**: Clean, accessible interface with smooth animations
 
 ## Usage
 
