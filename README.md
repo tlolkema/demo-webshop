@@ -3,7 +3,7 @@
 A simple fruit shop demo application built with HTML, CSS, and JavaScript. This project serves as a demonstration application for AI agent workshops and testing purposes.
 
 <div align="center">
-  <img src="./img/fruit-shop-logo.jpg" alt="Fruit Shop" width="400" height="auto" />
+  <img src="./img/fruit-shop-logo.png" alt="Fruit Shop" width="400" height="auto" />
 </div>
 
 ## Features
