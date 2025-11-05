@@ -62,9 +62,19 @@
     </footer>
     <script src="shop.js"></script>
     <script>
-      document.getElementById("addToBasket").onclick = function () {
-        addToBasket("lemon");
-      };
+      const gameState = getGameState();
+      const addButton = document.getElementById("addToBasket");
+      
+      if (!gameState.hasCompletedGame) {
+        addButton.textContent = "⚔️ Battle!";
+        addButton.onclick = function () {
+          startBattle("lemon");
+        };
+      } else {
+        addButton.onclick = function () {
+          addToBasket("lemon");
+        };
+      }
     </script>
   </body>
 </html>

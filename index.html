@@ -35,6 +35,7 @@
     </header>
     <main id="main-content" role="main">
       <h1 class="products-title">Products</h1>
+      <div class="game-status" id="gameStatus"></div>
       <ul class="emoji-list" role="list" aria-label="Product list">
         <li>
           <a
@@ -84,5 +85,36 @@
       </a>
     </footer>
     <script src="shop.js"></script>
+    <script>
+      // Display game status on index page
+      const gameState = getGameState();
+      const statusDiv = document.getElementById("gameStatus");
+      
+      if (!gameState.hasCompletedGame) {
+        const opponent = OPPONENTS[gameState.level];
+        statusDiv.innerHTML = `
+          <div class="game-info">
+            <p class="level-text">⚔️ Current Level: ${gameState.level}/5</p>
+            <p class="opponent-text">Next Battle: ${opponent.emoji} ${opponent.name}</p>
+            <p class="hp-text">Your HP: ${gameState.playerHealth}/${gameState.maxPlayerHealth}</p>
+            <button onclick="resetGameAndRefresh()" class="reset-game-btn">🔄 Reset Game</button>
+          </div>
+        `;
+      } else {
+        statusDiv.innerHTML = `
+          <div class="game-info victory-banner">
+            <p class="victory-banner-text">🏆 Level 5 Completed! You can now shop freely! 🏆</p>
+            <button onclick="resetGameAndRefresh()" class="reset-game-btn">🔄 Reset Game</button>
+          </div>
+        `;
+      }
+      
+      function resetGameAndRefresh() {
+        if (confirm("Are you sure you want to reset your game progress?")) {
+          resetGame();
+          location.reload();
+        }
+      }
+    </script>
   </body>
 </html>

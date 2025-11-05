@@ -36,6 +36,7 @@
     <main id="main-content" role="main">
       <div class="content-box">
         <h1>Your Shopping Basket</h1>
+        <div class="game-status-mini" id="gameStatusMini"></div>
         <ul
           class="order-list"
           id="basketList"
@@ -66,6 +67,16 @@
     </footer>
     <script src="shop.js"></script>
     <script>
+      // Display game status
+      const gameState = getGameState();
+      const statusMini = document.getElementById("gameStatusMini");
+      
+      if (!gameState.hasCompletedGame) {
+        statusMini.innerHTML = `
+          <p class="game-status-text">⚔️ Level ${gameState.level}/5 - Complete battles to unlock shopping!</p>
+        `;
+      }
+      
       renderBasket();
       document.getElementById("clearBasket").onclick = function () {
         clearBasket();
