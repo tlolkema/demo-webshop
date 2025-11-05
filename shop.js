@@ -4,6 +4,95 @@ const PRODUCTS = {
   lemon: { name: "Lemon", emoji: "🍋" },
 };
 
+// Theme Management
+const THEME_KEY = "fruit-shop-theme";
+const THEMES = {
+  LIGHT: "light",
+  DARK: "dark",
+  AUTO: "auto",
+};
+
+function getSystemTheme() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? THEMES.DARK
+    : THEMES.LIGHT;
+}
+
+function getSavedTheme() {
+  try {
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    return savedTheme && Object.values(THEMES).includes(savedTheme)
+      ? savedTheme
+      : THEMES.AUTO;
+  } catch (error) {
+    console.warn("Error reading theme from localStorage:", error);
+    return THEMES.AUTO;
+  }
+}
+
+function applyTheme(themePref) {
+  const actualTheme = themePref === THEMES.AUTO ? getSystemTheme() : themePref;
+  
+  if (actualTheme === THEMES.DARK) {
+    document.documentElement.setAttribute("data-theme", "dark");
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+  
+  // Update button states
+  updateThemeButtons(themePref);
+}
+
+function setTheme(themePref) {
+  try {
+    localStorage.setItem(THEME_KEY, themePref);
+    applyTheme(themePref);
+  } catch (error) {
+    console.warn("Error saving theme to localStorage:", error);
+  }
+}
+
+function updateThemeButtons(currentTheme) {
+  const buttons = document.querySelectorAll(".theme-toggle button");
+  buttons.forEach((btn) => {
+    if (btn.dataset.theme === currentTheme) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+}
+
+function initTheme() {
+  const savedTheme = getSavedTheme();
+  applyTheme(savedTheme);
+  
+  // Listen for system theme changes when in auto mode
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      if (getSavedTheme() === THEMES.AUTO) {
+        applyTheme(THEMES.AUTO);
+      }
+    });
+}
+
+function initThemeToggle() {
+  const themeButtons = document.querySelectorAll(".theme-toggle button");
+  themeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setTheme(btn.dataset.theme);
+    });
+  });
+}
+
+// Initialize theme on page load
+if (document.readyState !== "loading") {
+  initTheme();
+} else {
+  document.addEventListener("DOMContentLoaded", initTheme);
+}
+
 function getBasket() {
   try {
     const basket = localStorage.getItem("basket");

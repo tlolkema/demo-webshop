@@ -34,6 +34,13 @@
       </div>
     </header>
     <main id="main-content" role="main">
+      <div class="theme-toggle-container">
+        <div class="theme-toggle" role="group" aria-label="Theme selection">
+          <button data-theme="light" aria-label="Light theme">☀️ Light</button>
+          <button data-theme="auto" aria-label="Auto theme">🔄 Auto</button>
+          <button data-theme="dark" aria-label="Dark theme">🌙 Dark</button>
+        </div>
+      </div>
       <div class="content-box">
         <div class="emoji-display" role="img" aria-label="Apple emoji">🍏</div>
         <h1>Apple</h1>
@@ -62,6 +69,7 @@
     </footer>
     <script src="shop.js"></script>
     <script>
+      initThemeToggle();
       document.getElementById("addToBasket").onclick = function () {
         addToBasket("apple");
       };

@@ -1,32 +1,95 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap");
 
+/* CSS Variables for Light/Dark Theme */
+:root {
+  --bg-primary: #f8f5e3;
+  --bg-secondary: #fff;
+  --bg-tertiary: #f7faff;
+  --bg-tertiary-hover: #eaf2ff;
+  --bg-input: #f9fbfd;
+  --text-primary: #222;
+  --text-secondary: #888;
+  --text-link: #222;
+  --text-link-hover: #0077ff;
+  --text-footer: #d4c9a8;
+  --border-color: #cfd8e3;
+  --border-color-focus: #0077ff;
+  --shadow-light: rgba(0, 0, 0, 0.04);
+  --shadow-medium: rgba(0, 0, 0, 0.06);
+  --shadow-dark: rgba(0, 0, 0, 0.1);
+  --button-gradient-start: #ffe259;
+  --button-gradient-end: #ffa751;
+  --button-text: #7a4c00;
+  --button-text-hover: #a85c00;
+  --button-shadow: rgba(255, 167, 81, 0.12);
+  --button-shadow-hover: rgba(255, 167, 81, 0.18);
+  --cart-btn-bg: #e53935;
+  --cart-btn-bg-hover: #b71c1c;
+  --cart-btn-shadow: rgba(229, 57, 53, 0.18);
+  --cart-btn-shadow-hover: rgba(229, 57, 53, 0.22);
+  --border-dark: #111;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #242424;
+  --bg-tertiary-hover: #333333;
+  --bg-input: #2a2a2a;
+  --text-primary: #e8e8e8;
+  --text-secondary: #a0a0a0;
+  --text-link: #e8e8e8;
+  --text-link-hover: #4da3ff;
+  --text-footer: #8a8268;
+  --border-color: #444;
+  --border-color-focus: #4da3ff;
+  --shadow-light: rgba(0, 0, 0, 0.3);
+  --shadow-medium: rgba(0, 0, 0, 0.4);
+  --shadow-dark: rgba(0, 0, 0, 0.6);
+  --button-gradient-start: #d4b84a;
+  --button-gradient-end: #e89641;
+  --button-text: #2d1f00;
+  --button-text-hover: #1f1500;
+  --button-shadow: rgba(212, 184, 74, 0.2);
+  --button-shadow-hover: rgba(212, 184, 74, 0.3);
+  --cart-btn-bg: #d32f2f;
+  --cart-btn-bg-hover: #b71c1c;
+  --cart-btn-shadow: rgba(211, 47, 47, 0.3);
+  --cart-btn-shadow-hover: rgba(211, 47, 47, 0.4);
+  --border-dark: #555;
+}
+
 a {
   text-decoration: none;
-  color: #000;
+  color: var(--text-link);
   font-weight: 500;
   font-size: 1.5rem;
+  transition: color 0.2s;
 }
 a:hover {
-  color: #0077ff;
+  color: var(--text-link-hover);
 }
 body {
   font-family: "Baloo 2", Arial, sans-serif;
   font-size: 1.3rem;
-  background: #f8f5e3;
+  background: var(--bg-primary);
   margin: 0;
-  color: #222;
+  color: var(--text-primary);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 header {
-  background: #f8f5e3;
+  background: var(--bg-primary);
   padding: 1.2rem 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.3s ease;
 }
 nav a {
   margin-right: 1.2rem;
   text-decoration: none;
-  color: #222;
+  color: var(--text-link);
   font-weight: 500;
   font-size: 1.08rem;
   transition: color 0.2s;
@@ -35,7 +98,7 @@ nav a:last-child {
   margin-right: 0;
 }
 nav a:hover {
-  color: #0077ff;
+  color: var(--text-link-hover);
 }
 main {
   max-width: none;
@@ -52,46 +115,48 @@ main {
 .product-list li {
   margin: 1.2rem 0;
   font-size: 1.3rem;
-  background: #f7faff;
+  background: var(--bg-tertiary);
   border-radius: 8px;
   overflow: hidden;
+  transition: background 0.2s;
 }
 .product-list li:hover {
-  background: #eaf2ff;
+  background: var(--bg-tertiary-hover);
 }
 button {
-  background: linear-gradient(90deg, #ffe259 0%, #ffa751 100%);
-  color: #7a4c00;
+  background: linear-gradient(90deg, var(--button-gradient-start) 0%, var(--button-gradient-end) 100%);
+  color: var(--button-text);
   border: none;
   padding: 0.7rem 1.6rem;
   border-radius: 30px;
   cursor: pointer;
   font-size: 1.1rem;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(255, 167, 81, 0.12);
+  box-shadow: 0 2px 8px var(--button-shadow);
   transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
   letter-spacing: 0.5px;
 }
 button:hover {
-  background: linear-gradient(90deg, #ffa751 0%, #ffe259 100%);
-  color: #a85c00;
-  box-shadow: 0 4px 16px rgba(255, 167, 81, 0.18);
+  background: linear-gradient(90deg, var(--button-gradient-end) 0%, var(--button-gradient-start) 100%);
+  color: var(--button-text-hover);
+  box-shadow: 0 4px 16px var(--button-shadow-hover);
   transform: scale(1.04);
 }
 input[type="text"] {
   padding: 0.5rem 0.8rem;
-  border: 1px solid #cfd8e3;
+  border: 1px solid var(--border-color);
   border-radius: 5px;
   font-size: 1rem;
   margin-top: 0.2rem;
   margin-bottom: 0.5rem;
   width: 100%;
   box-sizing: border-box;
-  background: #f9fbfd;
+  background: var(--bg-input);
+  color: var(--text-primary);
   transition: border 0.2s;
 }
 input[type="text"]:focus {
-  border: 1.5px solid #0077ff;
+  border: 1.5px solid var(--border-color-focus);
   outline: none;
 }
 .order-list {
@@ -101,9 +166,10 @@ input[type="text"]:focus {
 .order-list li {
   margin: 0.7rem 0;
   font-size: 1.1rem;
-  background: #f7faff;
+  background: var(--bg-tertiary);
   border-radius: 8px;
   padding: 0.7rem 1.1rem;
+  transition: background 0.3s ease;
 }
 .logo-img,
 .basket-img {
@@ -143,7 +209,6 @@ input[type="text"]:focus {
 
 .basket-img {
   height: 300px;
-  vertical-align: middle;
   display: block;
 }
 .products-title {
@@ -154,16 +219,16 @@ input[type="text"]:focus {
 }
 .product-link {
   text-decoration: none;
-  color: #222;
+  color: var(--text-link);
   font-weight: 500;
   transition: color 0.2s;
 }
 .product-link:hover {
-  color: #0077ff;
+  color: var(--text-link-hover);
 }
 .product-desc {
   font-size: 1.2rem;
-  color: #888;
+  color: var(--text-secondary);
   margin-bottom: 1.2rem;
   font-style: italic;
 }
@@ -188,9 +253,9 @@ input[type="text"]:focus {
   transition: background 0.2s, box-shadow 0.25s cubic-bezier(0.4, 0.2, 0.2, 1);
 }
 .product-li-link:hover {
-  background: #eaf2ff;
+  background: var(--bg-tertiary-hover);
   text-decoration: none;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 10px var(--shadow-medium);
 }
 .emoji-list {
   display: flex;
@@ -207,36 +272,36 @@ input[type="text"]:focus {
   justify-content: center;
   width: 150px;
   height: 150px;
-  background: #fff;
-  /* border: 5px solid #111; */
+  background: var(--bg-secondary);
   border-radius: 18px;
   font-size: 4rem;
   text-decoration: none;
-  transition: box-shadow 0.18s, transform 0.18s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.18s, transform 0.18s, background 0.3s ease;
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 .emoji-box:hover {
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 24px var(--shadow-dark);
   transform: scale(1.07);
 }
 .content-box {
-  width: 530px; /* or use calc(3 * 150px + 2 * 2.5rem) */
-  margin: 3rem auto 0 auto; /* center horizontally, same top margin as emoji-list */
-  background: #fff;
+  width: 530px;
+  margin: 3rem auto 0 auto;
+  background: var(--bg-secondary);
   border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px var(--shadow-light);
   padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 .basket-indicator {
   position: absolute;
   bottom: 4rem;
   right: 3rem;
-  background: #e53935;
+  background: var(--cart-btn-bg);
   color: #fff;
-  border: 2.5px solid #111;
+  border: 2.5px solid var(--border-dark);
   border-radius: 50%;
   min-width: 2.1rem;
   height: 2.1rem;
@@ -245,9 +310,10 @@ input[type="text"]:focus {
   justify-content: center;
   font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.18);
+  box-shadow: 0 2px 8px var(--cart-btn-shadow);
   z-index: 2;
   pointer-events: none;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 .basket-emoji {
   font-size: 2.5rem;
@@ -268,21 +334,21 @@ input[type="text"]:focus {
 }
 .cart-action-btn,
 .cart-buttons-row button {
-  background: #e53935;
+  background: var(--cart-btn-bg);
   color: #fff;
-  border: 2.5px solid #111;
+  border: 2.5px solid var(--border-dark);
   border-radius: 30px;
   font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.18);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  box-shadow: 0 2px 8px var(--cart-btn-shadow);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s, border-color 0.3s ease;
   letter-spacing: 0.5px;
 }
 .cart-action-btn:hover,
 .cart-buttons-row button:hover {
-  background: #b71c1c;
+  background: var(--cart-btn-bg-hover);
   color: #fff;
-  box-shadow: 0 4px 16px rgba(229, 57, 53, 0.22);
+  box-shadow: 0 4px 16px var(--cart-btn-shadow-hover);
   transform: scale(1.04);
 }
 .form-group {
@@ -296,25 +362,28 @@ input[type="text"]:focus {
 .form-group input {
   width: 100%;
   padding: 0.8rem;
-  border: 2px solid #cfd8e3;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
+  background: var(--bg-input);
+  color: var(--text-primary);
   transition: border-color 0.2s;
 }
 .form-group input:focus {
-  border-color: #0077ff;
+  border-color: var(--border-color-focus);
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 119, 255, 0.1);
 }
 
 body footer {
   font-size: 1.1rem;
-  color: #d4c9a8;
+  color: var(--text-footer);
 }
 
 footer a {
   font-size: 1.1rem;
-  color: #d4c9a8;
+  color: var(--text-footer);
+  transition: color 0.2s;
 }
 
 .products-text {
@@ -352,4 +421,64 @@ footer a {
   display: none;
   color: green;
   margin-top: 1rem;
+}
+
+/* Theme Toggle Styles */
+.theme-toggle {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 25px;
+  padding: 0.3rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 2px 6px var(--shadow-light);
+}
+
+.theme-toggle button {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: none;
+  letter-spacing: 0.3px;
+}
+
+.theme-toggle button:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: scale(1);
+  box-shadow: none;
+}
+
+.theme-toggle button.active {
+  background: var(--button-gradient-start);
+  color: var(--button-text);
+  box-shadow: 0 2px 6px var(--button-shadow);
+}
+
+.theme-toggle button.active:hover {
+  background: var(--button-gradient-start);
+  color: var(--button-text-hover);
+  transform: scale(1.02);
+}
+
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
