@@ -2,6 +2,7 @@ const PRODUCTS = {
   apple: { name: "Apple", emoji: "🍏" },
   banana: { name: "Banana", emoji: "🍌" },
   lemon: { name: "Lemon", emoji: "🍋" },
+  tree: { name: "Banana Tree", emoji: "🌴" },
 };
 
 function getBasket() {
@@ -20,6 +21,20 @@ function addToBasket(product) {
   const basket = getBasket();
   basket.push(product);
   localStorage.setItem("basket", JSON.stringify(basket));
+  
+  // Check if we have 5 bananas and automatically add a tree
+  if (product === "banana") {
+    const bananaCount = basket.filter(item => item === "banana").length;
+    const treeCount = basket.filter(item => item === "tree").length;
+    
+    // For every 5 bananas, we should have 1 tree
+    const expectedTrees = Math.floor(bananaCount / 5);
+    
+    if (expectedTrees > treeCount) {
+      basket.push("tree");
+      localStorage.setItem("basket", JSON.stringify(basket));
+    }
+  }
 }
 
 function clearBasket() {
