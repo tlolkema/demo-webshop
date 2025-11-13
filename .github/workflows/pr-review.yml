@@ -14,7 +14,7 @@ jobs:
       run: |
         response=$(curl -s -X POST \
           -H "Content-Type: application/json" \
-          "https://ai-mastra-agent-workshop.vercel.app/api/workflows/prWorkflow/create-run")
+          "ai-mastra-agent-workshop-b25k.vercel.app/api/workflows/prWorkflow/create-run")
         
         echo "Create run response: $response"
         
@@ -52,7 +52,7 @@ jobs:
         response=$(curl -s -X POST \
           -H "Content-Type: application/json" \
           -d "$payload" \
-          "https://ai-mastra-agent-workshop.vercel.app/api/workflows/prWorkflow/start-async?runId=$runId")
+          "ai-mastra-agent-workshop-b25k.vercel.app/api/workflows/prWorkflow/start-async?runId=$runId")
         
         echo "Start workflow response: $response"
         
