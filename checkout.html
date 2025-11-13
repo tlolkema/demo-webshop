@@ -30,6 +30,7 @@
             />
             <span class="basket-text">View shopping basket</span>
           </a>
+           <a href="order-history.html" class="orders-link" aria-label="View order history">Orders</a>
         </nav>
       </div>
     </header>
@@ -86,8 +87,19 @@
       renderBasket();
       document.getElementById("checkoutForm").onsubmit = function (e) {
         e.preventDefault();
-        document.getElementById("successMsg").style.display = "block";
+        const name = document.getElementById('name').value || null;
+        const address = document.getElementById('address').value || null;
+
+        // Create an order from current basket and persist it
+        const order = createOrderFromBasket({ name, address, status: 'Placed' });
+
+        // Show success and hide form
+        const success = document.getElementById("successMsg");
+        success.textContent = `Thank you for your order! Order #${order.id} placed.`;
+        success.style.display = "block";
         document.getElementById("checkoutForm").style.display = "none";
+
+        // Clear basket and update basket UI/indicator
         clearBasket();
         renderBasket();
       };

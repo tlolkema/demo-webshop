@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order History - Fruit Shop</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header role="banner">
+      <div class="header-center">
+        <a href="index.html" class="logo" aria-label="Go to homepage">
+          <img src="img/fruit-shop-logo.png" class="logo-img" alt="Fruit Shop Logo" />
+          <span class="products-text"> View Products </span>
+        </a>
+        <nav role="navigation" aria-label="Main navigation">
+          <a href="basket.html" class="basket-link" aria-label="View shopping basket">
+            <img src="img/basket-icon.png" class="basket-img" alt="Shopping basket icon" />
+            <span class="basket-text">View shopping basket</span>
+          </a>
+          <a href="order-history.html" class="orders-link" aria-label="View order history">Orders</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main-content" role="main">
+      <div class="content-box">
+        <h1>Order History</h1>
+        <p class="product-desc">Your previous orders will appear here with date, quantity and status.</p>
+        <ul class="order-list" id="ordersList" aria-label="List of orders"></ul>
+      </div>
+    </main>
+    <footer>
+      <a href="https://www.linkedin.com/in/timlolkema/" target="_blank" rel="noopener noreferrer">By Tim Lolkema</a>
+    </footer>
+    <script src="shop.js"></script>
+    <script>
+      // render orders on page load
+      if (document.readyState !== 'loading') {
+        renderOrders();
+      } else {
+        document.addEventListener('DOMContentLoaded', renderOrders);
+      }
+    </script>
+  </body>
+</html>

@@ -407,3 +407,38 @@ button:disabled {
 button:disabled:hover {
   transform: scale(1);
 }
+
+/* Order history styling */
+.order-list {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 640px;
+}
+.order-list-item {
+  background: #f7faff;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin: 0.6rem 0;
+}
+.order-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.order-date {
+  flex: 1.4;
+  color: #333;
+}
+.order-qty {
+  flex: 0.6;
+  text-align: center;
+  font-weight: 700;
+}
+.order-status {
+  flex: 0.8;
+  text-align: right;
+  font-weight: 700;
+  color: #22863a;
+}
