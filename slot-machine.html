@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slot Machine - Fruit Shop</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header role="banner">
+      <div class="header-center">
+        <a href="index.html" class="logo" aria-label="Go to homepage">
+          <img
+            src="img/fruit-shop-logo.png"
+            class="logo-img"
+            alt="Fruit Shop Logo"
+          />
+          <span class="products-text"> View Products </span>
+        </a>
+        <nav role="navigation" aria-label="Main navigation">
+          <a
+            href="basket.html"
+            class="basket-link"
+            aria-label="View shopping basket"
+          >
+            <img
+              src="img/basket-icon.png"
+              class="basket-img"
+              alt="Shopping basket icon"
+            />
+            <span class="basket-text">View shopping basket</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main-content" role="main">
+      <div class="content-box">
+        <h1>🎰 Slot Machine</h1>
+        <div class="product-desc" aria-label="Product description">
+          Try your luck! Spin and get a random fruit!
+        </div>
+        <div class="slot-machine-container">
+          <div class="slot-machine-display">
+            <div
+              class="slot-reel"
+              id="slotReel"
+              role="img"
+              aria-label="Slot machine reel showing spinning fruits"
+            >
+              🍏
+            </div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button
+            id="spinButton"
+            class="cart-action-btn"
+            aria-label="Spin the slot machine and add random fruit to basket"
+          >
+            Add to Basket (Spin!)
+          </button>
+        </div>
+        <div id="resultMsg"></div>
+      </div>
+    </main>
+    <footer>
+      <a
+        href="https://www.linkedin.com/in/timlolkema/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        By Tim Lolkema
+      </a>
+    </footer>
+    <script src="shop.js"></script>
+    <script>
+      const FRUITS = Object.keys(PRODUCTS);
+
+      function getRandomFruit() {
+        return FRUITS[Math.floor(Math.random() * FRUITS.length)];
+      }
+
+      async function spinSlotMachine() {
+        const reel = document.getElementById("slotReel");
+        const button = document.getElementById("spinButton");
+        const resultMsg = document.getElementById("resultMsg");
+
+        // Disable button during spin
+        button.disabled = true;
+        resultMsg.textContent = "";
+
+        // Spin animation - rapidly change emojis
+        const spinDuration = 1000; // 1 second spin
+        const spinInterval = 100; // Change emoji every 100ms
+        const spinStartTime = Date.now();
+
+        const spinLoop = setInterval(() => {
+          const randomFruit = getRandomFruit();
+          reel.textContent = PRODUCTS[randomFruit].emoji;
+
+          if (Date.now() - spinStartTime >= spinDuration) {
+            clearInterval(spinLoop);
+
+            // Select final random fruit and add to basket
+            const selectedFruit = getRandomFruit();
+            reel.textContent = PRODUCTS[selectedFruit].emoji;
+
+            // Add to basket
+            addToBasket(selectedFruit);
+
+            // Show success message
+            resultMsg.textContent = `✓ Added ${PRODUCTS[selectedFruit].name} to basket!`;
+            resultMsg.style.color = "green";
+            resultMsg.style.marginTop = "1rem";
+
+            // Re-enable button
+            button.disabled = false;
+          }
+        }, spinInterval);
+      }
+
+      document.getElementById("spinButton").onclick = spinSlotMachine;
+    </script>
+  </body>
+</html>
