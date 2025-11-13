@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fruit Slot Machine - Fruit Shop</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header role="banner">
+      <div class="header-center">
+        <a href="index.html" class="logo" aria-label="Go to homepage">
+          <img
+            src="img/fruit-shop-logo.png"
+            class="logo-img"
+            alt="Fruit Shop Logo"
+          />
+          <span class="products-text"> View Products </span>
+        </a>
+        <nav role="navigation" aria-label="Main navigation">
+          <a
+            href="basket.html"
+            class="basket-link"
+            aria-label="View shopping basket"
+          >
+            <img
+              src="img/basket-icon.png"
+              class="basket-img"
+              alt="Shopping basket icon"
+            />
+            <span class="basket-text">View shopping basket</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main-content" role="main">
+      <div class="content-box">
+        <div class="emoji-display" id="slotEmoji" role="img" aria-label="Slot machine">🎰</div>
+        <h1>Fruit Slot Machine</h1>
+        <div class="product-desc" aria-label="Product description">
+          Try your luck! Click Add to Basket to spin the slot and add a random fruit to your basket.
+        </div>
+        <div class="button-container">
+          <button
+            id="addToBasket"
+            class="cart-action-btn"
+            aria-label="Spin slot machine and add a random fruit to basket"
+          >
+            Add to Basket
+          </button>
+        </div>
+        <div id="slotResult" class="product-desc" aria-live="polite" style="margin-top: 12px;"></div>
+      </div>
+    </main>
+    <footer>
+      <a
+        href="https://www.linkedin.com/in/timlolkema/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        By Tim Lolkema
+      </a>
+    </footer>
+    <script src="shop.js"></script>
+    <script>
+      (function () {
+        const button = document.getElementById("addToBasket");
+        const slotEmoji = document.getElementById("slotEmoji");
+        const resultEl = document.getElementById("slotResult");
+
+        // Build a list of available fruits from PRODUCTS
+        const fruitKeys = Object.keys(PRODUCTS);
+        const fruitEmojis = fruitKeys.map((k) => PRODUCTS[k].emoji);
+
+        let spinning = false;
+        let spinTimer = null;
+        let cycleTimer = null;
+
+        function startSpin(durationMs) {
+          spinning = true;
+          button.disabled = true;
+          resultEl.textContent = "Spinning...";
+
+          // Cycle through emojis quickly
+          let i = 0;
+          cycleTimer = setInterval(() => {
+            slotEmoji.textContent = fruitEmojis[i % fruitEmojis.length];
+            i++;
+          }, 100);
+
+          // Stop after duration and pick random fruit
+          spinTimer = setTimeout(() => {
+            clearInterval(cycleTimer);
+            cycleTimer = null;
+            const pickedIndex = Math.floor(Math.random() * fruitKeys.length);
+            const pickedKey = fruitKeys[pickedIndex];
+            const picked = PRODUCTS[pickedKey];
+            slotEmoji.textContent = picked.emoji;
+            const before = getBasket().length;
+            addToBasket(pickedKey);
+            const after = getBasket().length;
+            if (after > before) {
+              resultEl.textContent = `${picked.name} added to basket!`;
+            } else {
+              resultEl.textContent = `${picked.name} could not be added due to incompatibility with current basket.`;
+            }
+            spinning = false;
+            button.disabled = false;
+          }, durationMs);
+        }
+
+        button.addEventListener("click", function () {
+          if (spinning) return; // prevent re-entry
+          startSpin(1200);
+        });
+
+        // Clean up on page unload
+        window.addEventListener("beforeunload", function () {
+          if (cycleTimer) clearInterval(cycleTimer);
+          if (spinTimer) clearTimeout(spinTimer);
+        });
+      })();
+    </script>
+  </body>
+</html>

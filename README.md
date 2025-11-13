@@ -8,7 +8,7 @@ A simple fruit shop demo application built with HTML, CSS, and JavaScript. This 
 
 ## Features
 
-- 🍏 **Product Catalog**: Browse fresh fruits (Apple, Banana, Lemon, Strawberry)
+- 🍏 **Product Catalog**: Browse fresh fruits (Apple, Banana, Lemon, Strawberry) and try the 🎰 Slot Machine for a random fruit
 - 🛒 **Shopping Cart**: Add items to basket and manage your order
 
 ## Usage
