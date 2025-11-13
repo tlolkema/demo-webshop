@@ -353,3 +353,18 @@ footer a {
   color: green;
   margin-top: 1rem;
 }
+
+.smoothie-box {
+  text-align: left;
+  background: linear-gradient(180deg, #fff9e6 0%, #fff 100%);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #f0e1b8;
+  color: #333;
+  font-size: 1rem;
+}
+
+.smoothie-box strong {
+  display: block;
+  margin-bottom: 0.4rem;
+}

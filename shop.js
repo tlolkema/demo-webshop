@@ -30,11 +30,15 @@ function renderBasket() {
   const basket = getBasket();
   const basketList = document.getElementById("basketList");
   const cartButtonsRow = document.querySelector(".cart-buttons-row");
+  const smoothieOption = document.getElementById("smoothieOption");
+  const smoothiePreview = document.getElementById("smoothiePreview");
+  const blendCheckbox = document.getElementById("blendSmoothieCheckbox");
   if (!basketList) return;
   basketList.innerHTML = "";
   if (basket.length === 0) {
     basketList.innerHTML = "<li>No products in basket.</li>";
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
+    if (smoothieOption) smoothieOption.style.display = "none";
     return;
   }
   basket.forEach((product) => {
@@ -46,6 +50,49 @@ function renderBasket() {
     }
   });
   if (cartButtonsRow) cartButtonsRow.style.display = "flex";
+
+  // Show smoothie option when we have items
+  if (smoothieOption) smoothieOption.style.display = "block";
+
+  // Initialize checkbox from localStorage
+  if (blendCheckbox) {
+    const stored = localStorage.getItem("blendSmoothie");
+    blendCheckbox.checked = stored === "true";
+    blendCheckbox.onchange = function () {
+      localStorage.setItem("blendSmoothie", this.checked ? "true" : "false");
+      renderSmoothiePreview();
+    };
+  }
+
+  function computeSmoothie(basketItems) {
+    if (!basketItems || basketItems.length === 0) return null;
+    // Count fruit types
+    const types = basketItems.map((p) => p && p.toLowerCase()).filter(Boolean);
+    if (types.length === 0) return null;
+    const unique = Array.from(new Set(types));
+    if (unique.length === 1) {
+      return { type: "single", flavour: PRODUCTS[unique[0]] ? PRODUCTS[unique[0]].name : unique[0], contents: types };
+    }
+    // Multi-flavour blended
+    const flavourNames = unique.map((u) => (PRODUCTS[u] ? PRODUCTS[u].name : u));
+    return { type: "mixed", flavour: flavourNames.join(' + '), contents: types };
+  }
+
+  function renderSmoothiePreview() {
+    if (!smoothiePreview) return;
+    const shouldBlend = blendCheckbox ? blendCheckbox.checked : false;
+    const smoothie = computeSmoothie(basket);
+    if (!shouldBlend || !smoothie) {
+      smoothiePreview.style.display = "none";
+      smoothiePreview.innerHTML = "";
+      return;
+    }
+    smoothiePreview.style.display = "block";
+    smoothiePreview.innerHTML = `<div class='smoothie-box'><strong>Smoothie:</strong> <div>Type: ${smoothie.type === 'single' ? 'Single flavour' : 'Blended / multi-flavour'}</div><div>Flavour: ${smoothie.flavour}</div><div>Contents: ${smoothie.contents.join(', ')}</div></div>`;
+  }
+
+  // Render initial preview
+  renderSmoothiePreview();
 }
 
 function renderBasketIndicator() {
