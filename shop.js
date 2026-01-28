@@ -2,6 +2,8 @@ const PRODUCTS = {
   apple: { name: "Apple", emoji: "🍏" },
   banana: { name: "Banana", emoji: "🍌" },
   lemon: { name: "Lemon", emoji: "🍋" },
+  // Skewers are not sold separately; they are added/removed automatically.
+  skewers: { name: "Wooden Skewers (5-pack)", emoji: "🥢" },
 };
 
 function getBasket() {
@@ -17,16 +19,68 @@ function getBasket() {
 }
 
 function addToBasket(product) {
+  // Prevent manual adding of the skewer pack.
+  if (product === "skewers") return;
+
   const basket = getBasket();
   basket.push(product);
+
+  // Persist then ensure skewer packs are in sync with fruit count.
   localStorage.setItem("basket", JSON.stringify(basket));
+  syncSkewers();
 }
 
 function clearBasket() {
   localStorage.removeItem("basket");
 }
 
+// Count only fruit items in the basket (apple, banana, lemon)
+function countFruitItems(basket) {
+  return basket.filter((p) => p === "apple" || p === "banana" || p === "lemon").length;
+}
+
+// Compute how many skewer packs are needed: 1 pack per 3 pieces of fruit,
+// rounding down.
+function neededSkewerPacks(fruitCount) {
+  return Math.floor(fruitCount / 3);
+}
+
+// Synchronize skewer packs in the basket with the number of fruit items.
+function syncSkewers() {
+  const basket = getBasket();
+
+  const fruitCount = countFruitItems(basket);
+  const needed = neededSkewerPacks(fruitCount);
+
+  // Count existing skewer packs in basket
+  const existingSkewers = basket.filter((p) => p === "skewers").length;
+
+  if (existingSkewers < needed) {
+    // Add missing skewer packs
+    for (let i = 0; i < needed - existingSkewers; i++) {
+      basket.push("skewers");
+    }
+    localStorage.setItem("basket", JSON.stringify(basket));
+    return;
+  }
+
+  if (existingSkewers > needed) {
+    // Remove extra skewer packs
+    let toRemove = existingSkewers - needed;
+    // Remove from end to avoid disturbing order of fruits
+    for (let i = basket.length - 1; i >= 0 && toRemove > 0; i--) {
+      if (basket[i] === "skewers") {
+        basket.splice(i, 1);
+        toRemove--;
+      }
+    }
+    localStorage.setItem("basket", JSON.stringify(basket));
+  }
+}
+
 function renderBasket() {
+  // Ensure skewer packs match the current fruit count before rendering.
+  syncSkewers();
   const basket = getBasket();
   const basketList = document.getElementById("basketList");
   const cartButtonsRow = document.querySelector(".cart-buttons-row");
@@ -68,9 +122,13 @@ function renderBasketIndicator() {
 
 // Call this on page load and after basket changes
 if (document.readyState !== "loading") {
+  syncSkewers();
   renderBasketIndicator();
 } else {
-  document.addEventListener("DOMContentLoaded", renderBasketIndicator);
+  document.addEventListener("DOMContentLoaded", function () {
+    syncSkewers();
+    renderBasketIndicator();
+  });
 }
 
 // Patch basket functions to update indicator
@@ -82,5 +140,8 @@ window.addToBasket = function (product) {
 const origClearBasket = window.clearBasket;
 window.clearBasket = function () {
   origClearBasket();
+  // After clearing, ensure skewers are synchronized (no skewers remain)
+  syncSkewers();
+  renderBasket();
   renderBasketIndicator();
 };
