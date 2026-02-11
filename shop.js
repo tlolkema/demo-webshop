@@ -6,6 +6,8 @@ const PRODUCTS = {
   skewers: { name: "Wooden Skewers (5-pack)", emoji: "🔱", isPromo: true },
 };
 
+let requestedProductCounter = 0;
+
 function getBasket() {
   try {
     const basket = localStorage.getItem("basket");
@@ -74,6 +76,26 @@ function renderBasket() {
       const li = document.createElement("li");
       li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span>`;
       basketList.appendChild(li);
+    } else if (product.startsWith("requested_")) {
+      // Handle requested products
+      const reqData = getRequestedProduct(product);
+      if (reqData) {
+        const li = document.createElement("li");
+        li.className = "basket-requested";
+        li.innerHTML = `
+          <span class='basket-emoji'>📋</span>
+          <span>${reqData.name}</span>
+          <span class='item-requested-badge'>Customer Requested</span>
+          <div class='item-actions'>
+            <button class='edit-requested-btn' data-id='${product}' aria-label='Edit requested item'>Edit</button>
+            <button class='remove-requested-btn' data-id='${product}' aria-label='Remove requested item'>Remove</button>
+          </div>
+        `;
+        // Attach event listeners
+        li.querySelector(".edit-requested-btn").addEventListener("click", () => editRequestedProduct(product));
+        li.querySelector(".remove-requested-btn").addEventListener("click", () => removeRequestedProduct(product));
+        basketList.appendChild(li);
+      }
     }
   });
   if (cartButtonsRow) cartButtonsRow.style.display = "flex";
@@ -120,3 +142,132 @@ window.clearBasket = function () {
   origClearBasket();
   renderBasketIndicator();
 };
+
+// Requested products functions
+function getRequestedProduct(id) {
+  const requested = localStorage.getItem("requested_products");
+  if (!requested) return null;
+  const products = JSON.parse(requested);
+  return products[id] || null;
+}
+
+function addRequestedProduct(name, description, link) {
+  const id = `requested_${Date.now()}_${requestedProductCounter++}`;
+  const requested = localStorage.getItem("requested_products");
+  const products = requested ? JSON.parse(requested) : {};
+  products[id] = { name, description, link };
+  localStorage.setItem("requested_products", JSON.stringify(products));
+  // Add to basket
+  const basket = getBasket();
+  basket.push(id);
+  localStorage.setItem("basket", JSON.stringify(basket));
+  return id;
+}
+
+function editRequestedProduct(id) {
+  const reqData = getRequestedProduct(id);
+  if (!reqData) return;
+  // Show modal with current data
+  document.getElementById("productName").value = reqData.name;
+  document.getElementById("productDesc").value = reqData.description || "";
+  document.getElementById("productLink").value = reqData.link || "";
+  document.getElementById("requestModal").dataset.editId = id;
+  document.getElementById("requestModal").classList.add("show");
+  document.getElementById("requestModal").setAttribute("aria-hidden", "false");
+}
+
+function removeRequestedProduct(id) {
+  if (!confirm("Remove this requested product?")) return;
+  const requested = localStorage.getItem("requested_products");
+  if (requested) {
+    const products = JSON.parse(requested);
+    delete products[id];
+    localStorage.setItem("requested_products", JSON.stringify(products));
+  }
+  const basket = getBasket();
+  const idx = basket.indexOf(id);
+  if (idx !== -1) {
+    basket.splice(idx, 1);
+    localStorage.setItem("basket", JSON.stringify(basket));
+  }
+  renderBasket();
+  renderBasketIndicator();
+}
+
+// Modal and request form handling
+if (document.readyState !== "loading") {
+  initRequestModal();
+} else {
+  document.addEventListener("DOMContentLoaded", initRequestModal);
+}
+
+function initRequestModal() {
+  const modal = document.getElementById("requestModal");
+  if (!modal) return;
+  const requestBtn = document.getElementById("requestProductBtn");
+  const closeBtn = document.getElementById("closeModal");
+  const form = document.getElementById("requestForm");
+
+  if (requestBtn) {
+    requestBtn.addEventListener("click", () => {
+      modal.dataset.editId = "";
+      form.reset();
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden", "false");
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden", "true");
+    });
+  }
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden", "true");
+    }
+  });
+
+  // Close modal on Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("show")) {
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden", "true");
+    }
+  });
+
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("productName").value.trim();
+      const description = document.getElementById("productDesc").value.trim();
+      const link = document.getElementById("productLink").value.trim();
+
+      if (!name) {
+        alert("Please enter a product name");
+        return;
+      }
+
+      const editId = modal.dataset.editId;
+      if (editId) {
+        // Update existing requested product
+        const requested = localStorage.getItem("requested_products");
+        const products = JSON.parse(requested);
+        products[editId] = { name, description, link };
+        localStorage.setItem("requested_products", JSON.stringify(products));
+      } else {
+        // Add new requested product
+        addRequestedProduct(name, description, link);
+      }
+
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden", "true");
+      form.reset();
+      renderBasket();
+      renderBasketIndicator();
+    });
+  }
+}
