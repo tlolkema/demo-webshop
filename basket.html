@@ -41,6 +41,17 @@
           id="basketList"
           aria-label="Shopping basket items"
         ></ul>
+        <div class="smoothie-section" id="smoothieSection" role="group" aria-label="Smoothie options">
+          <label for="smoothieCheckbox" class="smoothie-label">
+            <input
+              type="checkbox"
+              id="smoothieCheckbox"
+              aria-label="Blend selected fruits into a smoothie"
+            />
+            <span>🥤 Blend my fruits into a smoothie</span>
+          </label>
+          <p id="smoothieFlavor" class="smoothie-flavor"></p>
+        </div>
         <div class="cart-buttons-row" role="group" aria-label="Basket actions">
           <button id="clearBasket" aria-label="Clear all items from basket">
             Clear Basket
@@ -71,6 +82,11 @@
         clearBasket();
         renderBasket();
       };
+      
+      document.getElementById("smoothieCheckbox").addEventListener("change", function () {
+        setSmoothieState(this.checked);
+        renderBasket();
+      });
     </script>
   </body>
 </html>

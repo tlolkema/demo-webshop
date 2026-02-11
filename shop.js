@@ -3,6 +3,9 @@ const PRODUCTS = {
   nordic_forest_cat: { name: "Nordic Forest Cat", emoji: "🐱" },
   british_shorthair: { name: "British Shorthair", emoji: "😺" },
   bengal: { name: "Bengal", emoji: "🐈" },
+  apple: { name: "Apple", emoji: "🍎", isFruit: true },
+  banana: { name: "Banana", emoji: "🍌", isFruit: true },
+  lemon: { name: "Lemon", emoji: "🍋", isFruit: true },
   skewers: { name: "Wooden Skewers (5-pack)", emoji: "🔱", isPromo: true },
 };
 
@@ -63,11 +66,13 @@ function renderBasket() {
   const basket = getBasket();
   const basketList = document.getElementById("basketList");
   const cartButtonsRow = document.querySelector(".cart-buttons-row");
+  const smoothieSection = document.getElementById("smoothieSection");
   if (!basketList) return;
   basketList.innerHTML = "";
   if (basket.length === 0) {
     basketList.innerHTML = "<li>No products in basket.</li>";
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
+    if (smoothieSection) smoothieSection.style.display = "none";
     return;
   }
   basket.forEach((product) => {
@@ -99,6 +104,35 @@ function renderBasket() {
     }
   });
   if (cartButtonsRow) cartButtonsRow.style.display = "flex";
+  
+  // Handle smoothie section
+  if (smoothieSection) {
+    const fruits = getFruits();
+    if (fruits.length > 0) {
+      smoothieSection.style.display = "block";
+      const checkbox = document.getElementById("smoothieCheckbox");
+      const flavorText = document.getElementById("smoothieFlavor");
+      
+      // Update checkbox state
+      checkbox.checked = getSmoothieState();
+      
+      // Update flavor text
+      if (checkbox.checked) {
+        const flavor = generateSmoothieFlavor(fruits);
+        flavorText.textContent = `✨ ${flavor}`;
+        
+        // Add smoothie item to the list
+        const smoothieLi = document.createElement("li");
+        smoothieLi.className = "basket-smoothie";
+        smoothieLi.innerHTML = `<span class='basket-emoji'>🥤</span> <span>${flavor}</span>`;
+        basketList.appendChild(smoothieLi);
+      } else {
+        flavorText.textContent = "";
+      }
+    } else {
+      smoothieSection.style.display = "none";
+    }
+  }
 }
 
 function renderBasketIndicator() {
@@ -269,5 +303,37 @@ function initRequestModal() {
       renderBasket();
       renderBasketIndicator();
     });
+  }
+}
+
+// Smoothie functionality
+function getFruits() {
+  const basket = getBasket();
+  return basket.filter((item) => {
+    const product = PRODUCTS[item];
+    return product && product.isFruit;
+  });
+}
+
+function generateSmoothieFlavor(fruits) {
+  const fruitNames = fruits.map((fruit) => PRODUCTS[fruit].name);
+  if (fruitNames.length === 0) {
+    return null;
+  }
+  if (fruitNames.length === 1) {
+    return `${fruitNames[0]} Smoothie`;
+  }
+  return `${fruitNames.join("-")} Blend`;
+}
+
+function getSmoothieState() {
+  return localStorage.getItem("smoothie_enabled") === "true";
+}
+
+function setSmoothieState(enabled) {
+  if (enabled) {
+    localStorage.setItem("smoothie_enabled", "true");
+  } else {
+    localStorage.removeItem("smoothie_enabled");
   }
 }
