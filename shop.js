@@ -3,6 +3,7 @@ const PRODUCTS = {
   nordic_forest_cat: { name: "Nordic Forest Cat", emoji: "🐱" },
   british_shorthair: { name: "British Shorthair", emoji: "😺" },
   bengal: { name: "Bengal", emoji: "🐈" },
+  skewers: { name: "Wooden Skewers (5-pack)", emoji: "🔱", isPromo: true },
 };
 
 function getBasket() {
@@ -25,6 +26,35 @@ function addToBasket(product) {
 
 function clearBasket() {
   localStorage.removeItem("basket");
+}
+
+function syncSkewers() {
+  const basket = getBasket();
+  // Count non-skewer items (cat breeds only)
+  const fruitCount = basket.filter((item) => item !== "skewers").length;
+  // Calculate required skewer packs: 1 pack per 3 fruits
+  const requiredSkewers = Math.floor(fruitCount / 3);
+  // Count current skewers in basket
+  const currentSkewers = basket.filter((item) => item === "skewers").length;
+  
+  // Adjust skewers to match required amount
+  if (requiredSkewers > currentSkewers) {
+    // Add skewers
+    for (let i = 0; i < requiredSkewers - currentSkewers; i++) {
+      basket.push("skewers");
+    }
+  } else if (requiredSkewers < currentSkewers) {
+    // Remove excess skewers
+    const itemsToRemove = currentSkewers - requiredSkewers;
+    for (let i = 0; i < itemsToRemove; i++) {
+      const idx = basket.lastIndexOf("skewers");
+      if (idx !== -1) {
+        basket.splice(idx, 1);
+      }
+    }
+  }
+  
+  localStorage.setItem("basket", JSON.stringify(basket));
 }
 
 function renderBasket() {
@@ -69,15 +99,20 @@ function renderBasketIndicator() {
 
 // Call this on page load and after basket changes
 if (document.readyState !== "loading") {
+  syncSkewers();
   renderBasketIndicator();
 } else {
-  document.addEventListener("DOMContentLoaded", renderBasketIndicator);
+  document.addEventListener("DOMContentLoaded", () => {
+    syncSkewers();
+    renderBasketIndicator();
+  });
 }
 
-// Patch basket functions to update indicator
+// Patch basket functions to update indicator and sync skewers
 const origAddToBasket = window.addToBasket;
 window.addToBasket = function (product) {
   origAddToBasket(product);
+  syncSkewers();
   renderBasketIndicator();
 };
 const origClearBasket = window.clearBasket;
