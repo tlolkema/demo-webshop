@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Checkout - Complete Your Order - Cat Breeds Shop</title>
+    <title>Nordic Forest Cat - Cat Breeds Shop</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -35,40 +35,19 @@
     </header>
     <main id="main-content" role="main">
       <div class="content-box">
-        <h1>Checkout</h1>
-        <form id="checkoutForm" role="form" aria-label="Checkout form">
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              aria-required="true"
-              aria-label="Enter your full name"
-            />
-          </div>
-          <div class="form-group">
-            <label for="address">Address:</label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              required
-              aria-required="true"
-              aria-label="Enter your delivery address"
-            />
-          </div>
+        <div class="emoji-display" role="img" aria-label="Nordic Forest Cat emoji">🐱</div>
+        <h1>Nordic Forest Cat</h1>
+        <div class="product-desc" aria-label="Product description">
+          Hardy and beautiful — perfect for active households.
+        </div>
+        <div class="button-container">
           <button
-            type="submit"
+            id="addToBasket"
             class="cart-action-btn"
-            aria-label="Place order"
+            aria-label="Add Nordic Forest Cat to basket"
           >
-            Place Order
+            Add to Basket
           </button>
-        </form>
-        <div id="successMsg" role="alert" aria-live="polite">
-          Thank you for your order!
         </div>
       </div>
     </main>
@@ -83,13 +62,8 @@
     </footer>
     <script src="shop.js"></script>
     <script>
-      renderBasket();
-      document.getElementById("checkoutForm").onsubmit = function (e) {
-        e.preventDefault();
-        document.getElementById("successMsg").style.display = "block";
-        document.getElementById("checkoutForm").style.display = "none";
-        clearBasket();
-        renderBasket();
+      document.getElementById("addToBasket").onclick = function () {
+        addToBasket("nordic_forest_cat");
       };
     </script>
   </body>
