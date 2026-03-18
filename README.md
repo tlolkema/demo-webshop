@@ -1,5 +1,7 @@
 # Demo Webshop
 
+# eerste commit GitHub
+
 A simple fruit shop demo application built with HTML, CSS, and JavaScript. This project serves as a demonstration application for AI agent workshops and testing purposes.
 
 <div align="center">
