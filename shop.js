@@ -45,6 +45,13 @@ function renderBasket() {
       basketList.appendChild(li);
     }
   });
+  // Add free skewers: for every 3 pieces of fruit, give one free 5-pack
+  const freeSkewersCount = Math.floor(basket.length / 3);
+  for (let i = 0; i < freeSkewersCount; i++) {
+    const skewerLi = document.createElement("li");
+    skewerLi.innerHTML = `<span class='basket-emoji'>🍢</span> <span>5 pack of wooden skewers (free)</span>`;
+    basketList.appendChild(skewerLi);
+  }
   if (cartButtonsRow) cartButtonsRow.style.display = "flex";
 }
 
