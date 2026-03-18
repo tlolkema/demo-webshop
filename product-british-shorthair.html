@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>British Shorthair - Cat Shop</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header role="banner">
+      <div class="header-center">
+        <a href="index.html" class="logo" aria-label="Go to homepage">
+          <img src="img/fruit-shop-logo.png" class="logo-img" alt="Cat Shop Logo" />
+          <span class="products-text"> View Breeds </span>
+        </a>
+        <nav role="navigation" aria-label="Main navigation">
+          <a href="basket.html" class="basket-link" aria-label="View shopping basket">
+            <img src="img/basket-icon.png" class="basket-img" alt="Shopping basket icon" />
+            <span class="basket-text">View shopping basket</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main-content" role="main">
+      <div class="content-box">
+        <div class="emoji-display" role="img" aria-label="British Shorthair emoji">😼</div>
+        <h1>British Shorthair</h1>
+        <div class="product-desc" aria-label="Product description">
+          Calm, sturdy, with a round face.
+        </div>
+        <div class="button-container">
+          <button id="addToBasket" class="cart-action-btn" aria-label="Add British Shorthair to basket">Add to Basket</button>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <a href="https://www.linkedin.com/in/timlolkema/" target="_blank" rel="noopener noreferrer">By Tim Lolkema</a>
+    </footer>
+    <script src="shop.js"></script>
+    <script>
+      document.getElementById("addToBasket").onclick = function () {
+        addToBasket("british_shorthair");
+      };
+    </script>
+  </body>
+</html>

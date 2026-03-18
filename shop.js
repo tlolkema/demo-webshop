@@ -1,7 +1,14 @@
 const PRODUCTS = {
-  apple: { name: "Apple", emoji: "🍏" },
-  banana: { name: "Banana", emoji: "🍌" },
-  lemon: { name: "Lemon", emoji: "🍋" },
+  siamese: { name: "Siamese", emoji: "😺" },
+  persian: { name: "Persian", emoji: "😻" },
+  maine_coon: { name: "Maine Coon", emoji: "🐈" },
+  ragdoll: { name: "Ragdoll", emoji: "😽" },
+  bengal: { name: "Bengal", emoji: "😸" },
+  sphynx: { name: "Sphynx", emoji: "🙀" },
+  british_shorthair: { name: "British Shorthair", emoji: "😼" },
+  scottish_fold: { name: "Scottish Fold", emoji: "😹" },
+  devon_rex: { name: "Devon Rex", emoji: "😿" },
+  abyssinian: { name: "Abyssinian", emoji: "🐱" },
 };
 
 function getBasket() {
@@ -45,7 +52,7 @@ function renderBasket() {
       basketList.appendChild(li);
     }
   });
-  // Add free skewers: for every 3 pieces of fruit, give one free 5-pack
+  // Add free skewers: for every 3 items, give one free 5-pack
   const freeSkewersCount = Math.floor(basket.length / 3);
   for (let i = 0; i < freeSkewersCount; i++) {
     const skewerLi = document.createElement("li");
