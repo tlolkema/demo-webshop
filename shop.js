@@ -4,22 +4,52 @@ const PRODUCTS = {
   lemon: { name: "Lemon", emoji: "🍋" },
 };
 
+function normalizeBasket(basket) {
+  if (!Array.isArray(basket)) return [];
+
+  return basket.reduce((items, entry) => {
+    const product = typeof entry === "string" ? entry : entry?.product;
+    if (!PRODUCTS[product]) return items;
+
+    const quantity = typeof entry === "string" ? 1 : Number(entry.quantity) || 1;
+    const existingItem = items.find((item) => item.product === product);
+
+    if (existingItem) {
+      existingItem.quantity += quantity;
+    } else {
+      items.push({ product, quantity });
+    }
+
+    return items;
+  }, []);
+}
+
 function getBasket() {
   try {
     const basket = localStorage.getItem("basket");
     if (!basket) return [];
-    const parsed = JSON.parse(basket);
-    return Array.isArray(parsed) ? parsed : [];
+    return normalizeBasket(JSON.parse(basket));
   } catch (error) {
     console.warn("Error parsing basket from localStorage:", error);
     return [];
   }
 }
 
+function saveBasket(basket) {
+  localStorage.setItem("basket", JSON.stringify(basket));
+}
+
 function addToBasket(product) {
   const basket = getBasket();
-  basket.push(product);
-  localStorage.setItem("basket", JSON.stringify(basket));
+  const existingItem = basket.find((item) => item.product === product);
+
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    basket.push({ product, quantity: 1 });
+  }
+
+  saveBasket(basket);
 }
 
 function clearBasket() {
@@ -37,11 +67,11 @@ function renderBasket() {
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
     return;
   }
-  basket.forEach((product) => {
+  basket.forEach(({ product, quantity }) => {
     const item = PRODUCTS[product];
     if (item) {
       const li = document.createElement("li");
-      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span>`;
+      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${quantity}x ${item.name}</span>`;
       basketList.appendChild(li);
     }
   });
@@ -58,8 +88,9 @@ function renderBasketIndicator() {
     indicator.className = "basket-indicator";
     basketLink.appendChild(indicator);
   }
-  if (basket.length > 0) {
-    indicator.textContent = basket.length;
+  const totalQuantity = basket.reduce((total, item) => total + item.quantity, 0);
+  if (totalQuantity > 0) {
+    indicator.textContent = totalQuantity;
     indicator.style.display = "flex";
   } else {
     indicator.style.display = "none";
