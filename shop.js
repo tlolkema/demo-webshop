@@ -1,7 +1,7 @@
 const PRODUCTS = {
-  apple: { name: "Apple", emoji: "🍏" },
-  banana: { name: "Banana", emoji: "🍌" },
-  lemon: { name: "Lemon", emoji: "🍋" },
+  apple: { name: "Apple", emoji: "🍏", allergies: [] },
+  banana: { name: "Banana", emoji: "🍌", allergies: [] },
+  lemon: { name: "Lemon", emoji: "🍋", allergies: ["citrus"] },
 };
 
 function getBasket() {
@@ -46,6 +46,35 @@ function renderBasket() {
     }
   });
   if (cartButtonsRow) cartButtonsRow.style.display = "flex";
+  
+  // Check for allergies
+  const allergies = new Set();
+  basket.forEach(product => {
+    const item = PRODUCTS[product];
+    if (item && item.allergies) {
+      item.allergies.forEach(allergy => allergies.add(allergy));
+    }
+  });
+  if (allergies.size > 0) {
+    const allergyList = document.createElement("li");
+    allergyList.innerHTML = `<strong>Allergy Warning:</strong> This basket contains items that may cause allergies: ${Array.from(allergies).join(", ")}`;
+    allergyList.style.background = "#ffebee";
+    allergyList.style.border = "1px solid #ffcdd2";
+    allergyList.style.color = "#c62828";
+    allergyList.style.padding = "0.5rem";
+    allergyList.style.borderRadius = "5px";
+    basketList.appendChild(allergyList);
+  }
+}
+
+function renderAllergies(productKey) {
+  const product = PRODUCTS[productKey];
+  const allergyDiv = document.getElementById("allergyWarnings");
+  if (!allergyDiv || !product.allergies || product.allergies.length === 0) return;
+  
+  allergyDiv.innerHTML = "<h2>Allergy Warnings</h2><ul>" +
+    product.allergies.map(allergy => `<li>${allergy}</li>`).join("") +
+    "</ul>";
 }
 
 function renderBasketIndicator() {

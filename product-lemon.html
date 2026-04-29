@@ -40,6 +40,7 @@
         <div class="product-desc" aria-label="Product description">
           When life gives you lemons, make a website.
         </div>
+        <div class="allergy-warnings" id="allergyWarnings"></div>
         <div class="button-container">
           <button
             id="addToBasket"
@@ -62,6 +63,7 @@
     </footer>
     <script src="shop.js"></script>
     <script>
+      renderAllergies("lemon");
       document.getElementById("addToBasket").onclick = function () {
         addToBasket("lemon");
       };

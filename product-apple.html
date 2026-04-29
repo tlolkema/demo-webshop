@@ -40,6 +40,7 @@
         <div class="product-desc" aria-label="Product description">
           Keeps the doctor away (unless you throw it at them).
         </div>
+        <div class="allergy-warnings" id="allergyWarnings"></div>
         <div class="button-container">
           <button
             id="addToBasket"
@@ -62,6 +63,7 @@
     </footer>
     <script src="shop.js"></script>
     <script>
+      renderAllergies("apple");
       document.getElementById("addToBasket").onclick = function () {
         addToBasket("apple");
       };
