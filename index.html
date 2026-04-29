@@ -35,35 +35,87 @@
     </header>
     <main id="main-content" role="main">
       <h1 class="products-title">Products</h1>
-      <ul class="emoji-list" role="list" aria-label="Product list">
-        <li>
-          <a
-            href="product-apple.html"
-            class="emoji-box"
-            aria-label="View Apple product details"
-            >🍏</a
-          >
-          <a href="product-apple.html">Go to Apple</a>
-        </li>
-        <li>
-          <a
-            href="product-banana.html"
-            class="emoji-box"
-            aria-label="View Banana product details"
-            >🍌</a
-          >
-          <a href="product-banana.html">Go to Banana</a>
-        </li>
-        <li>
-          <a
-            href="product-lemon.html"
-            class="emoji-box"
-            aria-label="View Lemon product details"
-            >🍋</a
-          >
-          <a href="product-lemon.html">Go to Lemon</a>
-        </li>
-      </ul>
+      <div class="category-tabs" role="tablist" aria-label="Product categories">
+        <button class="category-tab active" data-category="fruits" role="tab" aria-selected="true">
+          Fruits
+        </button>
+        <button class="category-tab" data-category="vegetables" role="tab" aria-selected="false">
+          Vegetables
+        </button>
+      </div>
+      <section id="fruits-category" class="product-category">
+        <h2 class="category-heading">Fruits</h2>
+        <ul class="emoji-list" role="list" aria-label="Fruit products">
+          <li>
+            <a
+              href="product-apple.html"
+              class="emoji-box"
+              aria-label="View Apple product details"
+              >🍏</a
+            >
+            <a href="product-apple.html">Go to Apple</a>
+          </li>
+          <li>
+            <a
+              href="product-banana.html"
+              class="emoji-box"
+              aria-label="View Banana product details"
+              >🍌</a
+            >
+            <a href="product-banana.html">Go to Banana</a>
+          </li>
+          <li>
+            <a
+              href="product-lemon.html"
+              class="emoji-box"
+              aria-label="View Lemon product details"
+              >🍋</a
+            >
+            <a href="product-lemon.html">Go to Lemon</a>
+          </li>
+          <li>
+            <a
+              href="product-tomato.html"
+              class="emoji-box"
+              aria-label="View Tomato product details"
+              >🍅</a
+            >
+            <a href="product-tomato.html">Go to Tomato</a>
+          </li>
+        </ul>
+      </section>
+      <section id="vegetables-category" class="product-category hidden">
+        <h2 class="category-heading">Vegetables</h2>
+        <ul class="emoji-list" role="list" aria-label="Vegetable products">
+          <li>
+            <a
+              href="product-cucumber.html"
+              class="emoji-box"
+              aria-label="View Cucumber product details"
+              >🥒</a
+            >
+            <a href="product-cucumber.html">Go to Cucumber</a>
+          </li>
+          <li>
+            <a
+              href="product-avocado.html"
+              class="emoji-box"
+              aria-label="View Avocado product details"
+              >🥑</a
+            >
+            <a href="product-avocado.html">Go to Avocado</a>
+          </li>
+          <li>
+            <a
+              href="product-tomato.html"
+              class="emoji-box"
+              aria-label="View Tomato product details"
+              >🍅</a
+            >
+            <a href="product-tomato.html">Go to Tomato</a>
+          </li>
+        </ul>
+      </section>
     </main>
     <footer>
       <a

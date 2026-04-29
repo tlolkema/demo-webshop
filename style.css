@@ -201,6 +201,41 @@ input[type="text"]:focus {
   padding: 0;
   margin: 3rem 0 0 0;
 }
+.category-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0 auto;
+  max-width: 760px;
+}
+.category-tab {
+  border: 1px solid #d4d4d4;
+  background: #fff;
+  color: #222;
+  padding: 0.9rem 1.4rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.category-tab:hover {
+  background: #f0f6ff;
+}
+.category-tab.active {
+  background: linear-gradient(90deg, #ffe259 0%, #ffa751 100%);
+  border-color: #ffaa36;
+  color: #7a4c00;
+}
+.product-category.hidden {
+  display: none;
+}
+.category-heading {
+  text-align: center;
+  font-size: 1.6rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
 .emoji-box {
   display: flex;
   align-items: center;

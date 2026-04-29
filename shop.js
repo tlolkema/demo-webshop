@@ -2,6 +2,9 @@ const PRODUCTS = {
   apple: { name: "Apple", emoji: "🍏" },
   banana: { name: "Banana", emoji: "🍌" },
   lemon: { name: "Lemon", emoji: "🍋" },
+  cucumber: { name: "Cucumber", emoji: "🥒" },
+  avocado: { name: "Avocado", emoji: "🥑" },
+  tomato: { name: "Tomato", emoji: "🍅" },
 };
 
 function getBasket() {
@@ -66,11 +69,34 @@ function renderBasketIndicator() {
   }
 }
 
-// Call this on page load and after basket changes
-if (document.readyState !== "loading") {
+function setupCategoryTabs() {
+  const tabs = document.querySelectorAll(".category-tab");
+  const productSections = document.querySelectorAll(".product-category");
+  if (!tabs.length || !productSections.length) return;
+  function selectCategory(category) {
+    tabs.forEach((tab) => {
+      const isActive = tab.dataset.category === category;
+      tab.classList.toggle("active", isActive);
+      tab.setAttribute("aria-selected", String(isActive));
+    });
+    productSections.forEach((section) => {
+      section.classList.toggle("hidden", section.id !== `${category}-category`);
+    });
+  }
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => selectCategory(tab.dataset.category));
+  });
+}
+
+function initPage() {
   renderBasketIndicator();
+  setupCategoryTabs();
+}
+
+if (document.readyState !== "loading") {
+  initPage();
 } else {
-  document.addEventListener("DOMContentLoaded", renderBasketIndicator);
+  document.addEventListener("DOMContentLoaded", initPage);
 }
 
 // Patch basket functions to update indicator
