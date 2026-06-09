@@ -4,12 +4,44 @@ const PRODUCTS = {
   lemon: { name: "Lemon", emoji: "🍋" },
 };
 
+function normalizeBasketItem(item) {
+  if (typeof item === "string") {
+    return { product: item, quantity: 1 };
+  }
+
+  if (item && typeof item.product === "string") {
+    return {
+      product: item.product,
+      quantity:
+        Number.isInteger(item.quantity) && item.quantity > 0 ? item.quantity : 1,
+    };
+  }
+
+  return null;
+}
+
 function getBasket() {
   try {
     const basket = localStorage.getItem("basket");
     if (!basket) return [];
     const parsed = JSON.parse(basket);
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.reduce((items, basketItem) => {
+      const normalizedItem = normalizeBasketItem(basketItem);
+      if (!normalizedItem) return items;
+
+      const existingItem = items.find(
+        (item) => item.product === normalizedItem.product
+      );
+      if (existingItem) {
+        existingItem.quantity += normalizedItem.quantity;
+      } else {
+        items.push(normalizedItem);
+      }
+
+      return items;
+    }, []);
   } catch (error) {
     console.warn("Error parsing basket from localStorage:", error);
     return [];
@@ -18,7 +50,14 @@ function getBasket() {
 
 function addToBasket(product) {
   const basket = getBasket();
-  basket.push(product);
+  const existingItem = basket.find((item) => item.product === product);
+
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    basket.push({ product, quantity: 1 });
+  }
+
   localStorage.setItem("basket", JSON.stringify(basket));
 }
 
@@ -37,11 +76,11 @@ function renderBasket() {
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
     return;
   }
-  basket.forEach((product) => {
-    const item = PRODUCTS[product];
+  basket.forEach((basketItem) => {
+    const item = PRODUCTS[basketItem.product];
     if (item) {
       const li = document.createElement("li");
-      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span>`;
+      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${basketItem.quantity}x ${item.name}</span>`;
       basketList.appendChild(li);
     }
   });
@@ -58,8 +97,9 @@ function renderBasketIndicator() {
     indicator.className = "basket-indicator";
     basketLink.appendChild(indicator);
   }
-  if (basket.length > 0) {
-    indicator.textContent = basket.length;
+  const totalQuantity = basket.reduce((total, item) => total + item.quantity, 0);
+  if (totalQuantity > 0) {
+    indicator.textContent = totalQuantity;
     indicator.style.display = "flex";
   } else {
     indicator.style.display = "none";
