@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to Fruit Shop - Fresh Fruits Online</title>
+    <title>Fresh Orange - Fruit Shop</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -34,45 +34,22 @@
       </div>
     </header>
     <main id="main-content" role="main">
-      <h1 class="products-title">Products</h1>
-      <ul class="emoji-list" role="list" aria-label="Product list">
-        <li>
-          <a
-            href="product-apple.html"
-            class="emoji-box"
-            aria-label="View Apple product details"
-            >🍏</a
+      <div class="content-box">
+        <div class="emoji-display" role="img" aria-label="Orange emoji">🍊</div>
+        <h1>Orange</h1>
+        <div class="product-desc" aria-label="Product description">
+          Vitamin C powerhouse - your immune system's best friend.
+        </div>
+        <div class="button-container">
+          <button
+            id="addToBasket"
+            class="cart-action-btn"
+            aria-label="Add Orange to basket"
           >
-          <a href="product-apple.html">Go to Apple</a>
-        </li>
-        <li>
-          <a
-            href="product-banana.html"
-            class="emoji-box"
-            aria-label="View Banana product details"
-            >🍌</a
-          >
-          <a href="product-banana.html">Go to Banana</a>
-        </li>
-        <li>
-          <a
-            href="product-lemon.html"
-            class="emoji-box"
-            aria-label="View Lemon product details"
-            >🍋</a
-          >
-          <a href="product-lemon.html">Go to Lemon</a>
-        </li>
-        <li>
-          <a
-            href="product-orange.html"
-            class="emoji-box"
-            aria-label="View Orange product details"
-            >🍊</a
-          >
-          <a href="product-orange.html">Go to Orange</a>
-        </li>
-      </ul>
+            Add to Basket
+          </button>
+        </div>
+      </div>
     </main>
     <footer>
       <a
@@ -84,5 +61,10 @@
       </a>
     </footer>
     <script src="shop.js"></script>
+    <script>
+      document.getElementById("addToBasket").onclick = function () {
+        addToBasket("orange");
+      };
+    </script>
   </body>
 </html>
