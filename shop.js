@@ -1,7 +1,8 @@
 const PRODUCTS = {
-  apple: { name: "Apple", emoji: "🍏" },
-  banana: { name: "Banana", emoji: "🍌" },
-  lemon: { name: "Lemon", emoji: "🍋" },
+  apple: { name: "Apple", emoji: "🍏", price: 1.25 },
+  banana: { name: "Banana", emoji: "🍌", price: 0.95 },
+  lemon: { name: "Lemon", emoji: "🍋", price: 0.75 },
+  pineapple: { name: "Pineapple", emoji: "🍍", price: 3.5 },
 };
 
 function getBasket() {
@@ -37,14 +38,28 @@ function renderBasket() {
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
     return;
   }
-  basket.forEach((product) => {
-    const item = PRODUCTS[product];
+  // Aggregate quantities per product id
+  const counts = {};
+  basket.forEach((p) => {
+    counts[p] = (counts[p] || 0) + 1;
+  });
+  let total = 0;
+  Object.keys(counts).forEach((productId) => {
+    const qty = counts[productId];
+    const item = PRODUCTS[productId];
     if (item) {
+      const lineTotal = (item.price || 0) * qty;
+      total += lineTotal;
       const li = document.createElement("li");
-      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span>`;
+      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span> <span class='basket-qty'>x${qty}</span> <span class='basket-price'>$${lineTotal.toFixed(2)}</span>`;
       basketList.appendChild(li);
     }
   });
+  // Append subtotal
+  const subtotalLi = document.createElement("li");
+  subtotalLi.className = 'basket-subtotal';
+  subtotalLi.innerHTML = `<strong>Subtotal:</strong> <span class='basket-total'>$${total.toFixed(2)}</span>`;
+  basketList.appendChild(subtotalLi);
   if (cartButtonsRow) cartButtonsRow.style.display = "flex";
 }
 
