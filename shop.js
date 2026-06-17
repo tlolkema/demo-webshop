@@ -4,12 +4,34 @@ const PRODUCTS = {
   lemon: { name: "Lemon", emoji: "🍋" },
 };
 
+function normalizeBasket(basket) {
+  if (!Array.isArray(basket)) return [];
+
+  return basket.reduce((lineItems, item) => {
+    const isLegacyProduct = typeof item === "string";
+    const product = isLegacyProduct ? item : item?.product;
+    const quantity = isLegacyProduct ? 1 : Number(item?.quantity) || 1;
+
+    if (!PRODUCTS[product]) return lineItems;
+
+    const existingLineItem = lineItems.find(
+      (lineItem) => lineItem.product === product,
+    );
+    if (existingLineItem) {
+      existingLineItem.quantity += quantity;
+    } else {
+      lineItems.push({ product, quantity });
+    }
+
+    return lineItems;
+  }, []);
+}
+
 function getBasket() {
   try {
     const basket = localStorage.getItem("basket");
     if (!basket) return [];
-    const parsed = JSON.parse(basket);
-    return Array.isArray(parsed) ? parsed : [];
+    return normalizeBasket(JSON.parse(basket));
   } catch (error) {
     console.warn("Error parsing basket from localStorage:", error);
     return [];
@@ -17,8 +39,19 @@ function getBasket() {
 }
 
 function addToBasket(product) {
+  if (!PRODUCTS[product]) return;
+
   const basket = getBasket();
-  basket.push(product);
+  const existingLineItem = basket.find(
+    (lineItem) => lineItem.product === product,
+  );
+
+  if (existingLineItem) {
+    existingLineItem.quantity += 1;
+  } else {
+    basket.push({ product, quantity: 1 });
+  }
+
   localStorage.setItem("basket", JSON.stringify(basket));
 }
 
@@ -37,19 +70,23 @@ function renderBasket() {
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
     return;
   }
-  basket.forEach((product) => {
-    const item = PRODUCTS[product];
+  basket.forEach((lineItem) => {
+    const item = PRODUCTS[lineItem.product];
     if (item) {
       const li = document.createElement("li");
-      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span>`;
+      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${lineItem.quantity}x ${item.name}</span>`;
       basketList.appendChild(li);
     }
   });
   if (cartButtonsRow) cartButtonsRow.style.display = "flex";
 }
 
+function getBasketItemCount() {
+  return getBasket().reduce((total, lineItem) => total + lineItem.quantity, 0);
+}
+
 function renderBasketIndicator() {
-  const basket = getBasket();
+  const basketItemCount = getBasketItemCount();
   let indicator = document.querySelector(".basket-indicator");
   if (!indicator) {
     const basketLink = document.querySelector(".basket-link");
@@ -58,8 +95,8 @@ function renderBasketIndicator() {
     indicator.className = "basket-indicator";
     basketLink.appendChild(indicator);
   }
-  if (basket.length > 0) {
-    indicator.textContent = basket.length;
+  if (basketItemCount > 0) {
+    indicator.textContent = basketItemCount;
     indicator.style.display = "flex";
   } else {
     indicator.style.display = "none";
