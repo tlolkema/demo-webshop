@@ -67,9 +67,10 @@
             Place Order
           </button>
         </form>
-        <div id="successMsg" role="alert" aria-live="polite">
+        <div id="successMsg" role="alert" aria-live="polite" style="display:none">
           Thank you for your order!
         </div>
+        <div id="errorMsg" role="alert" aria-live="assertive" style="display:none;color:#c00;margin-top:8px"></div>
       </div>
     </main>
     <footer>
@@ -86,7 +87,20 @@
       renderBasket();
       document.getElementById("checkoutForm").onsubmit = function (e) {
         e.preventDefault();
-        document.getElementById("successMsg").style.display = "block";
+        var address = document.getElementById("address").value.trim();
+        // only letters and numbers allowed in each part, format: xxx@yyy.zzz
+        var re = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z0-9]+$/;
+        var errorEl = document.getElementById("errorMsg");
+        var successEl = document.getElementById("successMsg");
+        if (!re.test(address)) {
+          errorEl.style.display = "block";
+          errorEl.textContent = "ERR_INVALID_EMAIL_FORMAT: Address must be in the format xxx@yyy.zzz (letters and numbers only).";
+          successEl.style.display = "none";
+          return false;
+        }
+        // valid
+        errorEl.style.display = "none";
+        successEl.style.display = "block";
         document.getElementById("checkoutForm").style.display = "none";
         clearBasket();
         renderBasket();
