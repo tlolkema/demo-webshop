@@ -67,6 +67,16 @@
             Place Order
           </button>
         </form>
+        <div
+          id="orderSummary"
+          class="order-summary"
+          role="region"
+          aria-label="Order summary"
+        >
+          <h2>Order Summary</h2>
+          <ul id="summaryList" class="order-list"></ul>
+          <div id="smoothieSummary" class="smoothie-summary"></div>
+        </div>
         <div id="successMsg" role="alert" aria-live="polite">
           Thank you for your order!
         </div>
@@ -83,13 +93,13 @@
     </footer>
     <script src="shop.js"></script>
     <script>
-      renderBasket();
+      renderOrderSummary();
       document.getElementById("checkoutForm").onsubmit = function (e) {
         e.preventDefault();
         document.getElementById("successMsg").style.display = "block";
         document.getElementById("checkoutForm").style.display = "none";
         clearBasket();
-        renderBasket();
+        renderOrderSummary();
       };
     </script>
   </body>

@@ -348,6 +348,78 @@ footer a {
   margin-top: 1.2rem;
 }
 
+.smoothie-section {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  background: linear-gradient(135deg, #f8e5ff 0%, #fff0f5 100%);
+  border-radius: 12px;
+  border: 2px solid #e1bee7;
+  display: none;
+}
+
+.smoothie-section.visible {
+  display: block;
+}
+
+.smoothie-option {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.1rem;
+}
+
+.smoothie-option input[type="checkbox"] {
+  width: 1.4rem;
+  height: 1.4rem;
+  cursor: pointer;
+  accent-color: #e53935;
+  margin: 0;
+}
+
+.smoothie-option label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-weight: 500;
+  color: #222;
+}
+
+.smoothie-flavor {
+  font-weight: 700;
+  color: #e53935;
+}
+
+.order-summary {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  text-align: left;
+}
+
+.order-summary h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  text-align: center;
+  color: #222;
+}
+
+.smoothie-order-item {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: linear-gradient(135deg, #f8e5ff 0%, #fff0f5 100%);
+  border-radius: 8px;
+  border-left: 4px solid #e53935;
+  font-weight: 500;
+  color: #222;
+}
+
 #successMsg {
   display: none;
   color: green;
