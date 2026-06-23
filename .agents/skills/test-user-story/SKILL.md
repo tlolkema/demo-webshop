@@ -12,7 +12,7 @@ Validate a user story by deriving test cases from it and executing each one via 
 
 USER_STORY: the full text of $ARGUMENTS
 
-When this skill is called without arguments, ask the user the question what functionality or user story to test. When the user mentions a specific story / ticket call the `get-user-story` skill to retrieve thatt user story.
+When this skill is called without arguments, ask the user what functionality or user story they want to test. If the user mentions a specific story or ticket, use the `get-user-story` skill to retrieve the full user story before deriving test cases.
 
 ## Workflow
 
