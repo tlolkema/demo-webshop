@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <!--
+      Template placeholder contract:
+      - CASE_STATUS must be exactly: PASS, FAIL, or SKIPPED
+      - CASE_STATUS_CLASS must be exactly: status-badge-pass, status-badge-fail, or status-badge-skipped
+      - OVERALL_STATUS must be exactly: PASS or FAILURE
+      - OVERALL_STATUS_KEY must be exactly: pass or failure
+    -->
+    <title>AI report - {{STORY_NAME}}</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@450&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#1c1b1b",
+              "on-tertiary-fixed": "#1c1b1a",
+              "tertiary-fixed": "#e6e1df",
+              "on-secondary": "#ffffff",
+              "secondary-fixed-dim": "#b7c8e1",
+              "on-surface-variant": "#444748",
+              background: "#fdf8f8",
+              "surface-container-high": "#ebe7e6",
+              "on-surface": "#1c1b1b",
+              "surface-container-highest": "#e5e2e1",
+              "on-secondary-fixed-variant": "#38485d",
+              "inverse-primary": "#c8c6c5",
+              "error-container": "#ffdad6",
+              "outline-variant": "#c4c7c7",
+              tertiary: "#000000",
+              primary: "#000000",
+              "on-tertiary-fixed-variant": "#484645",
+              surface: "#fdf8f8",
+              "on-error": "#ffffff",
+              "surface-container-low": "#f7f3f2",
+              "primary-fixed": "#e5e2e1",
+              "inverse-on-surface": "#f4f0ef",
+              "on-secondary-container": "#54647a",
+              "secondary-fixed": "#d3e4fe",
+              "surface-variant": "#e5e2e1",
+              "surface-container": "#f1edec",
+              "on-primary-fixed-variant": "#474646",
+              "on-primary-fixed": "#1c1b1b",
+              "tertiary-fixed-dim": "#cac6c3",
+              "tertiary-container": "#1c1b1a",
+              "on-background": "#1c1b1b",
+              "inverse-surface": "#313030",
+              "surface-tint": "#5f5e5e",
+              secondary: "#505f76",
+              "on-primary": "#ffffff",
+              "surface-dim": "#ddd9d8",
+              "primary-fixed-dim": "#c8c6c5",
+              outline: "#747878",
+              "surface-container-lowest": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "surface-bright": "#fdf8f8",
+              "on-secondary-fixed": "#0b1c30",
+              "on-tertiary-container": "#868381",
+              "on-primary-container": "#858383",
+              error: "#ba1a1a",
+              "secondary-container": "#d0e1fb"
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem"
+            },
+            spacing: {
+              gutter: "16px",
+              base: "4px",
+              "row-padding": "12px",
+              "container-padding": "24px",
+              "card-gap": "12px"
+            },
+            fontFamily: {
+              "code-sm": ["JetBrains Mono"],
+              "body-md": ["Inter"],
+              "headline-md": ["Inter"],
+              "body-sm": ["Inter"],
+              "label-caps": ["Inter"],
+              "display-lg": ["Inter"]
+            },
+            fontSize: {
+              "code-sm": ["12px", { lineHeight: "18px", fontWeight: "450" }],
+              "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-md": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+              "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+              "label-caps": ["11px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+              "display-lg": ["30px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }]
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      body {
+        background-color: #fdf8f8;
+        color: #1c1b1b;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 10px;
+        border-radius: 9999px;
+        font-family: "Inter", sans-serif;
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border: 1px solid transparent;
+      }
+
+      .status-badge-pass {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+
+      .status-badge-fail {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+
+      .status-badge-skipped {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-badge .dot {
+        width: 8px;
+        height: 8px;
+        flex: 0 0 8px;
+        border-radius: 50%;
+        background-color: currentColor;
+      }
+
+      .overall-status-dot-success,
+      .overall-status-dot-pass {
+        background-color: #10b981;
+      }
+
+      .overall-status-dot-failure,
+      .overall-status-dot-fail {
+        background-color: #ef4444;
+      }
+
+      .video-overlay {
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%);
+      }
+
+      video,
+      img.evidence-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body class="font-body-md text-body-md min-h-screen">
+    <main class="max-w-[1440px] mx-auto p-container-padding">
+      <!-- High-Level Summary Section -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-card-gap mb-10">
+        <!-- Status -->
+        <div class="bg-surface border border-outline-variant p-4 flex flex-col justify-between h-32">
+          <span class="font-label-caps text-label-caps text-on-surface-variant">STATUS</span>
+          <div class="flex items-end gap-2">
+            <span class="font-display-lg text-display-lg text-primary uppercase">{{OVERALL_STATUS}}</span>
+            <div class="mb-2 w-2 h-2 rounded-full overall-status-dot-{{OVERALL_STATUS_KEY}} animate-pulse"></div>
+          </div>
+        </div>
+        <!-- Environment -->
+        <div class="bg-surface border border-outline-variant p-4 flex flex-col justify-between h-32">
+          <span class="font-label-caps text-label-caps text-on-surface-variant">ENVIRONMENT</span>
+          <div class="overflow-hidden">
+            <span class="font-headline-md text-headline-md block mb-1">{{ENVIRONMENT}}</span>
+            <span class="font-code-sm text-code-sm text-on-surface-variant truncate block">{{ENVIRONMENT_URL}}</span>
+          </div>
+        </div>
+        <!-- Cases -->
+        <div class="bg-surface border border-outline-variant p-4 flex flex-col justify-between h-32">
+          <span class="font-label-caps text-label-caps text-on-surface-variant">CASES</span>
+          <div>
+            <span class="font-display-lg text-display-lg text-primary">{{PASSED_CASES}}/{{TOTAL_CASES}}</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant ml-1">passed</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Detailed Test Case Cards -->
+      <div class="space-y-gutter">
+        {{TEST_CASE_CARDS}}
+      </div>
+
+    </main>
+
+    <template id="test-case-card-template">
+      <article class="bg-surface border border-outline-variant hover:border-primary transition-colors flex flex-col lg:flex-row">
+        <!-- Content Side -->
+        <div class="flex-1 p-6 border-b lg:border-b-0 lg:border-r border-outline-variant">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <span class="font-code-sm text-code-sm text-on-surface-variant mb-1 block uppercase">CASE #{{CASE_NUMBER}}</span>
+              <h3 class="font-headline-md text-headline-md text-primary">{{CASE_NAME}}</h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-2">{{CASE_GOAL}}</p>
+            </div>
+            <!--
+              Status mapping:
+              PASS    -> CASE_STATUS_CLASS=status-badge-pass
+              FAIL    -> CASE_STATUS_CLASS=status-badge-fail
+              SKIPPED -> CASE_STATUS_CLASS=status-badge-skipped
+            -->
+            <div class="status-badge {{CASE_STATUS_CLASS}}">
+              <div class="dot"></div>
+              {{CASE_STATUS}}
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-label-caps text-label-caps text-on-surface-variant mb-2">STEPS</h4>
+              <ul class="space-y-3 font-body-sm text-body-sm">
+                {{CASE_STEPS}}
+              </ul>
+            </div>
+            {{CASE_FAILURE_DETAILS}}
+          </div>
+        </div>
+        <!-- Evidence Side -->
+        <div class="lg:w-1/3 p-6 bg-surface-container-low flex flex-col">
+          <h4 class="font-label-caps text-label-caps text-on-surface-variant mb-4">EVIDENCE</h4>
+          <div class="relative aspect-video bg-black overflow-hidden group cursor-pointer border border-outline-variant">
+            {{EVIDENCE_MEDIA}}
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none {{EVIDENCE_PLAY_ICON_VISIBILITY}}">
+              <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-white" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+              </div>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-3 video-overlay pointer-events-none">
+              <span class="font-code-sm text-code-sm text-white/90">{{EVIDENCE_FILENAME}}</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <template id="case-step-template">
+      <li class="flex items-start gap-3">
+        <span class="font-code-sm text-primary w-4">{{STEP_NUMBER}}</span>
+        <span>{{STEP_DESCRIPTION}}</span>
+      </li>
+    </template>
+
+    <template id="video-evidence-template">
+      <video class="opacity-90" controls preload="metadata" src="{{EVIDENCE_SRC}}"></video>
+    </template>
+
+    <template id="image-evidence-template">
+      <img class="evidence-image opacity-90 group-hover:scale-105 transition-transform duration-500" src="{{EVIDENCE_SRC}}" alt="{{EVIDENCE_ALT}}" />
+    </template>
+
+    <template id="case-failure-details-template">
+      <section class="bg-surface-container-low border border-outline-variant p-6 mt-6">
+        <span class="font-label-caps text-label-caps text-error mb-4 block">FAILURE DETAIL</span>
+        <dl class="font-body-sm text-body-sm text-on-secondary-fixed-variant space-y-5">
+          <div>
+            <dt class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">Expected</dt>
+            <dd>{{CASE_EXPECTED}}</dd>
+          </div>
+          <div>
+            <dt class="font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase">Actual</dt>
+            <dd>{{CASE_ACTUAL}}</dd>
+          </div>
+        </dl>
+        {{CASE_CONSOLE_ERRORS_SECTION}}
+      </section>
+    </template>
+
+    <template id="case-console-errors-template">
+      <section class="mt-6">
+        <span class="font-label-caps text-label-caps text-error mb-3 block">CONSOLE ERRORS</span>
+        <pre class="font-code-sm text-code-sm whitespace-pre-wrap text-on-secondary-fixed-variant bg-surface-container-lowest border border-outline-variant p-4 overflow-auto">{{CASE_CONSOLE_ERRORS}}</pre>
+      </section>
+    </template>
+
+    <script>
+      // Simple micro-interaction for rows
+      document.querySelectorAll("article").forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          card.style.transform = "translateY(-2px)";
+          card.style.boxShadow = "0 4px 6px -1px rgb(0 0 0 / 0.05)";
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "translateY(0)";
+          card.style.boxShadow = "none";
+        });
+      });
+    </script>
+  </body>
+</html>
