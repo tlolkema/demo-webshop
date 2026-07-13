@@ -1,3 +1,6 @@
 .DS_Store
 ai-evidence/
 .playwright-cli/
+node_modules/
+test-results/
+playwright-report/
