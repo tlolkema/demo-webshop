@@ -307,6 +307,118 @@ input[type="text"]:focus {
   box-shadow: 0 0 0 3px rgba(0, 119, 255, 0.1);
 }
 
+/* Banana checkout gate (ticket #77) */
+.cart-action-btn:disabled {
+  background: #cfd8e3;
+  border-color: #9aa7b8;
+  color: #eef2f7;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+.cart-action-btn:disabled:hover {
+  background: #cfd8e3;
+  transform: none;
+}
+.banana-gate {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.2rem;
+  padding: 1.2rem;
+  background: #fffdf3;
+  border: 2.5px dashed #e6c200;
+  border-radius: 18px;
+  transition: opacity 0.4s, transform 0.4s;
+}
+.banana-gate.banana-passed {
+  opacity: 0;
+  transform: translateX(120%) rotate(20deg);
+  pointer-events: none;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+.banana-guard {
+  position: relative;
+  font-size: 3.5rem;
+  line-height: 1;
+  transform: rotate(-25deg);
+  transition: transform 0.2s;
+  user-select: none;
+}
+.banana-guard.mood-delighted {
+  transform: rotate(0deg) scale(1.15);
+}
+.banana-guard.mood-offended {
+  transform: rotate(-25deg) scale(0.92);
+  filter: saturate(1.4);
+}
+.banana-guard.mood-coy {
+  transform: rotate(15deg);
+}
+.banana-speech {
+  margin: 0;
+  font-weight: 600;
+  text-align: center;
+  min-height: 1.4em;
+  color: #6b5b00;
+}
+.banana-input-row {
+  display: flex;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 340px;
+}
+.banana-input-row input {
+  flex: 1;
+  padding: 0.7rem;
+  border: 2px solid #e6c200;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.banana-input-row input:focus {
+  outline: none;
+  border-color: #b39700;
+  box-shadow: 0 0 0 3px rgba(230, 194, 0, 0.15);
+}
+.banana-input-row .cart-action-btn {
+  padding: 0.5rem 1.1rem;
+  background: #e6c200;
+  border-color: #6b5b00;
+  color: #3d3400;
+  white-space: nowrap;
+}
+.banana-input-row .cart-action-btn:hover {
+  background: #c9aa00;
+  color: #3d3400;
+}
+.banana-shake {
+  animation: banana-shake 0.4s ease;
+}
+@keyframes banana-shake {
+  0%, 100% { transform: rotate(-25deg) translateX(0); }
+  25% { transform: rotate(-25deg) translateX(-6px); }
+  75% { transform: rotate(-25deg) translateX(6px); }
+}
+.banana-sparkle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 1.2rem;
+  pointer-events: none;
+  animation: banana-sparkle 0.8s ease-out forwards;
+  transform: rotate(var(--angle)) translateY(-2.4rem);
+}
+@keyframes banana-sparkle {
+  0% { opacity: 0; transform: rotate(var(--angle)) translateY(0) scale(0.4); }
+  40% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(var(--angle)) translateY(-3rem) scale(1.1); }
+}
+
 body footer {
   font-size: 1.1rem;
   color: #d4c9a8;
