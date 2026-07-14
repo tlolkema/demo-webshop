@@ -15,9 +15,32 @@ test("should add a product to the basket", async ({ page }) => {
     await page.getByRole("link", { name: "View shopping basket" }).click();
   });
 
-  await test.step("Then Apple is in the basket", async () => {
-    await expect(page.getByRole("list", { name: "Shopping basket items" })).toContainText("Apple");
+  await test.step("Then Apple is in the basket with a quantity of one", async () => {
+    await expect(page.getByRole("list", { name: "Shopping basket items" })).toContainText("1x Apple");
     await expect(page.getByRole("button", { name: "Clear all items from basket" })).toBeVisible();
+  });
+});
+
+test("should combine identical products into one basket line item", async ({ page }) => {
+  await test.step("Given the shopper adds two Apples and one Banana", async () => {
+    await page.goto("/product-apple.html");
+    await page.getByRole("button", { name: "Add Apple to basket" }).click();
+    await page.getByRole("button", { name: "Add Apple to basket" }).click();
+    await page.goto("/product-banana.html");
+    await page.getByRole("button", { name: "Add Banana to basket" }).click();
+  });
+
+  await test.step("When the shopper opens the basket", async () => {
+    await page.goto("/basket.html");
+  });
+
+  await test.step("Then each product has one line with its quantity", async () => {
+    const basketItems = page
+      .getByRole("list", { name: "Shopping basket items" })
+      .getByRole("listitem");
+    await expect(basketItems).toHaveCount(2);
+    await expect(basketItems.nth(0)).toContainText("2x Apple");
+    await expect(basketItems.nth(1)).toContainText("1x Banana");
   });
 });
 

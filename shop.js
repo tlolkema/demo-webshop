@@ -9,7 +9,26 @@ function getBasket() {
     const basket = localStorage.getItem("basket");
     if (!basket) return [];
     const parsed = JSON.parse(basket);
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.reduce((lineItems, entry) => {
+      // Treat the previous string-based format as a quantity of one.
+      const product = typeof entry === "string" ? entry : entry?.product;
+      const quantity = typeof entry === "string" ? 1 : entry?.quantity;
+      if (!product || !Number.isInteger(quantity) || quantity < 1) {
+        return lineItems;
+      }
+
+      const existingLineItem = lineItems.find(
+        (lineItem) => lineItem.product === product,
+      );
+      if (existingLineItem) {
+        existingLineItem.quantity += quantity;
+      } else {
+        lineItems.push({ product, quantity });
+      }
+      return lineItems;
+    }, []);
   } catch (error) {
     console.warn("Error parsing basket from localStorage:", error);
     return [];
@@ -18,7 +37,16 @@ function getBasket() {
 
 function addToBasket(product) {
   const basket = getBasket();
-  basket.push(product);
+  const existingLineItem = basket.find(
+    (lineItem) => lineItem.product === product,
+  );
+
+  if (existingLineItem) {
+    existingLineItem.quantity += 1;
+  } else {
+    basket.push({ product, quantity: 1 });
+  }
+
   localStorage.setItem("basket", JSON.stringify(basket));
 }
 
@@ -37,11 +65,11 @@ function renderBasket() {
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
     return;
   }
-  basket.forEach((product) => {
+  basket.forEach(({ product, quantity }) => {
     const item = PRODUCTS[product];
     if (item) {
       const li = document.createElement("li");
-      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span>`;
+      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${quantity}x ${item.name}</span>`;
       basketList.appendChild(li);
     }
   });
@@ -59,7 +87,10 @@ function renderBasketIndicator() {
     basketLink.appendChild(indicator);
   }
   if (basket.length > 0) {
-    indicator.textContent = basket.length;
+    indicator.textContent = basket.reduce(
+      (total, lineItem) => total + lineItem.quantity,
+      0,
+    );
     indicator.style.display = "flex";
   } else {
     indicator.style.display = "none";
