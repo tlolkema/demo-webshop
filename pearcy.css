@@ -1,0 +1,474 @@
+/* Pearcy 🍐 — the friendly shopping assistant. Scoped under #pearcy-root so it
+   never collides with the storefront's styles. Inherits the Baloo 2 font and
+   warm palette already loaded by style.css. */
+
+#pearcy-root {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 9999;
+  font-family: "Baloo 2", Arial, sans-serif;
+}
+
+#pearcy-root button {
+  font-family: inherit;
+}
+
+/* The `hidden` attribute must win over our display:flex/inline-block rules,
+   which would otherwise override the low-priority UA `[hidden]` rule. */
+#pearcy-root [hidden] {
+  display: none !important;
+}
+
+.pearcy-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Avatar ---------------------------------------------------------------- */
+
+.pearcy-avatar-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.pearcy-avatar {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 3px solid #4e7c2f;
+  background: radial-gradient(circle at 35% 30%, #d9f28a 0%, #a7d84f 55%, #8bc34a 100%);
+  box-shadow: 0 6px 18px rgba(76, 124, 47, 0.35);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pearcy-avatar:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 22px rgba(76, 124, 47, 0.45);
+}
+
+.pearcy-avatar:focus-visible {
+  outline: 3px solid #0077ff;
+  outline-offset: 3px;
+}
+
+.pearcy-avatar__face {
+  font-size: 2.4rem;
+  line-height: 1;
+  display: block;
+  pointer-events: none;
+}
+
+.pearcy-avatar__dismiss {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: #e53935;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.pearcy-avatar-wrap:hover .pearcy-avatar__dismiss,
+.pearcy-avatar-wrap:focus-within .pearcy-avatar__dismiss,
+.pearcy-avatar__dismiss:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.pearcy-avatar__dismiss:focus-visible {
+  outline: 2px solid #0077ff;
+  outline-offset: 2px;
+}
+
+/* --- Restore pill ---------------------------------------------------------- */
+
+.pearcy-restore {
+  border: 2px solid #4e7c2f;
+  background: #a7d84f;
+  color: #2f4d1c;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 30px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(76, 124, 47, 0.3);
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.pearcy-restore:hover {
+  background: #b6e56a;
+  transform: scale(1.04);
+}
+
+.pearcy-restore:focus-visible {
+  outline: 3px solid #0077ff;
+  outline-offset: 2px;
+}
+
+/* --- Proactive tip --------------------------------------------------------- */
+
+.pearcy-tip {
+  position: absolute;
+  right: 0;
+  bottom: 84px;
+  width: 240px;
+  background: #fff;
+  border: 2px solid #a7d84f;
+  border-radius: 16px 16px 4px 16px;
+  padding: 0.9rem 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  animation: pearcy-pop 0.25s ease;
+}
+
+.pearcy-tip__text {
+  margin: 0 0 0.6rem 0;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.35;
+}
+
+.pearcy-tip__actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.pearcy-tip__btn {
+  background: #a7d84f;
+  color: #2f4d1c;
+  border: none;
+  border-radius: 20px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pearcy-tip__btn:hover {
+  background: #b6e56a;
+}
+
+.pearcy-tip__btn--off {
+  background: transparent;
+  color: #888;
+  text-decoration: underline;
+}
+
+.pearcy-tip__btn--off:hover {
+  background: transparent;
+  color: #555;
+}
+
+.pearcy-tip__btn:focus-visible {
+  outline: 2px solid #0077ff;
+  outline-offset: 2px;
+}
+
+/* --- Chat panel ------------------------------------------------------------ */
+
+.pearcy-panel {
+  position: absolute;
+  right: 0;
+  bottom: 84px;
+  width: 340px;
+  max-width: calc(100vw - 3rem);
+  height: 460px;
+  max-height: calc(100vh - 8rem);
+  background: #fffdf6;
+  border: 2px solid #a7d84f;
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: pearcy-pop 0.2s ease;
+}
+
+.pearcy-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(90deg, #a7d84f 0%, #8bc34a 100%);
+  color: #234012;
+}
+
+.pearcy-panel__titles {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.pearcy-panel__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.pearcy-panel__tagline {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #3a5c22;
+}
+
+.pearcy-panel__close {
+  background: transparent;
+  border: none;
+  color: #234012;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.3rem;
+  border-radius: 6px;
+}
+
+.pearcy-panel__close:hover {
+  color: #000;
+}
+
+.pearcy-panel__close:focus-visible {
+  outline: 2px solid #0077ff;
+  outline-offset: 2px;
+}
+
+.pearcy-panel__messages {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pearcy-msg {
+  display: flex;
+}
+
+.pearcy-msg--user {
+  justify-content: flex-end;
+}
+
+.pearcy-msg--pearcy {
+  justify-content: flex-start;
+}
+
+.pearcy-msg__bubble {
+  max-width: 82%;
+  padding: 0.6rem 0.85rem;
+  border-radius: 14px;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.pearcy-msg--pearcy .pearcy-msg__bubble {
+  background: #eef7dd;
+  color: #2f4d1c;
+  border-bottom-left-radius: 4px;
+}
+
+.pearcy-msg--user .pearcy-msg__bubble {
+  background: linear-gradient(90deg, #ffe259 0%, #ffa751 100%);
+  color: #7a4c00;
+  border-bottom-right-radius: 4px;
+}
+
+.pearcy-msg__bubble a {
+  color: #0077ff;
+  font-size: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* --- Typing indicator ------------------------------------------------------ */
+
+.pearcy-typing {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0 1rem 0.4rem 1.2rem;
+  align-items: center;
+  height: 1.2rem;
+}
+
+.pearcy-typing[hidden] {
+  display: none;
+}
+
+.pearcy-typing__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8bc34a;
+  animation: pearcy-bounce 1s infinite ease-in-out;
+}
+
+.pearcy-typing__dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.pearcy-typing__dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* --- Composer -------------------------------------------------------------- */
+
+.pearcy-panel__form {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.7rem;
+  border-top: 1px solid #e6e0c8;
+  background: #fffdf6;
+}
+
+.pearcy-panel__input {
+  flex: 1 1 auto;
+  padding: 0.6rem 0.8rem;
+  border: 1.5px solid #cfd8e3;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #fff;
+  min-width: 0;
+}
+
+.pearcy-panel__input:focus {
+  border-color: #8bc34a;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(139, 195, 74, 0.2);
+}
+
+.pearcy-panel__input:disabled {
+  background: #f2f0e6;
+}
+
+.pearcy-panel__send {
+  background: linear-gradient(90deg, #ffe259 0%, #ffa751 100%);
+  color: #7a4c00;
+  border: none;
+  border-radius: 20px;
+  padding: 0.6rem 1.1rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.pearcy-panel__send:hover {
+  transform: scale(1.04);
+}
+
+.pearcy-panel__send:focus-visible {
+  outline: 2px solid #0077ff;
+  outline-offset: 2px;
+}
+
+/* --- Animated mascot states ------------------------------------------------ */
+
+.pearcy-avatar--idle .pearcy-avatar__face {
+  animation: pearcy-bob 3s ease-in-out infinite;
+}
+
+.pearcy-avatar--thinking .pearcy-avatar__face {
+  animation: pearcy-think 0.8s ease-in-out infinite;
+}
+
+.pearcy-avatar--celebrating .pearcy-avatar__face {
+  animation: pearcy-celebrate 0.6s ease-in-out 2;
+}
+
+@keyframes pearcy-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes pearcy-think {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+}
+
+@keyframes pearcy-celebrate {
+  0% { transform: translateY(0) scale(1) rotate(0); }
+  30% { transform: translateY(-10px) scale(1.15) rotate(-12deg); }
+  60% { transform: translateY(-4px) scale(1.1) rotate(12deg); }
+  100% { transform: translateY(0) scale(1) rotate(0); }
+}
+
+@keyframes pearcy-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pearcy-pop {
+  0% { transform: scale(0.85) translateY(8px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* --- Responsive: full-width panel on small screens ------------------------- */
+
+@media (max-width: 480px) {
+  #pearcy-root {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .pearcy-panel {
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 78vh;
+    max-height: 78vh;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .pearcy-tip {
+    right: 0;
+    width: min(240px, calc(100vw - 2rem));
+  }
+}
+
+/* --- Respect reduced-motion preferences ------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .pearcy-avatar__face,
+  .pearcy-typing__dot,
+  .pearcy-panel,
+  .pearcy-tip {
+    animation: none !important;
+  }
+
+  .pearcy-avatar,
+  .pearcy-restore,
+  .pearcy-panel__send {
+    transition: none;
+  }
+}
