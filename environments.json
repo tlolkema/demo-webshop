@@ -1,0 +1,8 @@
+{
+    "development": {
+        "url": "index.html"
+    },
+    "production": {
+        "url": "https://demo-webshop.vercel.app/"
+    }
+}
