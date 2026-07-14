@@ -258,6 +258,36 @@ input[type="text"]:focus {
 #basketList li {
   background: none !important;
 }
+.basket-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.basket-item-details {
+  display: flex;
+  align-items: center;
+}
+.remove-item-btn {
+  background: #e53935;
+  color: #fff;
+  border: 2px solid #111;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.remove-item-btn:hover {
+  background: #b71c1c;
+  transform: scale(1.04);
+}
 .cart-buttons-row {
   display: flex;
   flex-direction: row;
