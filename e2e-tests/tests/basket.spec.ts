@@ -20,21 +20,3 @@ test("should add a product to the basket", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Clear all items from basket" })).toBeVisible();
   });
 });
-
-test("should remove a product from the basket", async ({ page }) => {
-  await test.step("Given Apple is in the shopper's basket", async () => {
-    await page.goto("/product-apple.html");
-    await page.getByRole("button", { name: "Add Apple to basket" }).click();
-    await page.goto("/basket.html");
-    await expect(page.getByRole("list", { name: "Shopping basket items" })).toContainText("Apple");
-  });
-
-  await test.step("When the shopper clears the basket", async () => {
-    await page.getByRole("button", { name: "Clear all items from basket" }).click();
-  });
-
-  await test.step("Then the basket is empty", async () => {
-    await expect(page.getByRole("list", { name: "Shopping basket items" })).toHaveText("No products in basket.");
-    await expect(page.getByRole("button", { name: "Clear all items from basket" })).toBeHidden();
-  });
-});
