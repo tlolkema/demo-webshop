@@ -344,6 +344,73 @@ footer a {
   font-size: 4rem;
 }
 
+/* --- Basket personality: speech bubble near the cart icon --- */
+.basket-bubble {
+  position: absolute;
+  top: 0.5rem;
+  right: 100%;
+  margin-right: 1rem;
+  width: max-content;
+  max-width: 240px;
+  background: #fff;
+  color: #222;
+  border: 2.5px solid #111;
+  border-radius: 14px;
+  padding: 0.6rem 0.9rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: left;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transform: translateY(6px) scale(0.96);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+.basket-bubble::after {
+  content: "";
+  position: absolute;
+  top: 1.1rem;
+  right: -12px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #111;
+}
+.basket-bubble--show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* --- Basket personality: per-item remove button --- */
+.basket-remove-btn {
+  background: #fff;
+  color: #b71c1c;
+  border: 2px solid #e53935;
+  border-radius: 50%;
+  width: 1.9rem;
+  height: 1.9rem;
+  min-width: 1.9rem;
+  padding: 0;
+  margin-left: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: none;
+  vertical-align: middle;
+}
+.basket-remove-btn:hover {
+  background: #e53935;
+  color: #fff;
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(229, 57, 53, 0.22);
+}
+#basketList li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .button-container {
   margin-top: 1.2rem;
 }
