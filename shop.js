@@ -17,6 +17,19 @@ function getBasket() {
   }
 }
 
+function getSmoothieOption() {
+  return localStorage.getItem("smoothieOption") === "true";
+}
+
+function setSmoothieOption(enabled) {
+  localStorage.setItem("smoothieOption", String(enabled));
+}
+
+function getSmoothieFlavour(basket) {
+  const distinct = new Set(basket).size;
+  return distinct <= 1 ? "Single flavour smoothie" : "Multi flavour smoothie";
+}
+
 function addToBasket(product) {
   const basket = getBasket();
   basket.push(product);
@@ -25,6 +38,7 @@ function addToBasket(product) {
 
 function clearBasket() {
   localStorage.removeItem("basket");
+  localStorage.removeItem("smoothieOption");
 }
 
 function removeFromBasket(index) {
@@ -65,6 +79,30 @@ function renderBasket() {
     }
   });
   if (cartButtonsRow) cartButtonsRow.style.display = "flex";
+  renderSmoothieToggle(basket);
+}
+
+function renderSmoothieToggle(basket) {
+  const container = document.getElementById("smoothieToggleContainer");
+  if (!container) return;
+  if (basket.length === 0) {
+    container.style.display = "none";
+    return;
+  }
+  container.style.display = "flex";
+  const toggle = document.getElementById("smoothieToggle");
+  const flavourLabel = document.getElementById("smoothieFlavourLabel");
+  if (!toggle) return;
+  const enabled = getSmoothieOption();
+  toggle.checked = enabled;
+  if (flavourLabel) {
+    if (enabled) {
+      flavourLabel.textContent = getSmoothieFlavour(basket);
+      flavourLabel.style.display = "";
+    } else {
+      flavourLabel.style.display = "none";
+    }
+  }
 }
 
 function renderBasketIndicator() {

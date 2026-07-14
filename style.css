@@ -532,3 +532,88 @@ footer a {
   color: green;
   margin-top: 1rem;
 }
+
+/* --- Smoothie toggle (ticket #35) --- */
+.smoothie-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1rem 0 0.4rem 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.smoothie-switch {
+  position: relative;
+  display: inline-block;
+  width: 3.2rem;
+  height: 1.8rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.smoothie-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.smoothie-slider {
+  position: absolute;
+  inset: 0;
+  background: #cfd8e3;
+  border-radius: 1.8rem;
+  transition: background 0.2s;
+}
+
+.smoothie-slider::before {
+  content: "";
+  position: absolute;
+  height: 1.3rem;
+  width: 1.3rem;
+  left: 0.25rem;
+  bottom: 0.25rem;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+
+.smoothie-switch input:checked + .smoothie-slider {
+  background: #43a047;
+}
+
+.smoothie-switch input:checked + .smoothie-slider::before {
+  transform: translateX(1.4rem);
+}
+
+.smoothie-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.smoothie-flavour-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2e7d32;
+  background: #e8f5e9;
+  border: 1.5px solid #a5d6a7;
+  border-radius: 12px;
+  padding: 0.15rem 0.7rem;
+}
+
+.smoothie-summary {
+  background: #e8f5e9;
+  border: 2px solid #43a047;
+  border-radius: 12px;
+  padding: 0.6rem 1.1rem;
+  color: #2e7d32;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}

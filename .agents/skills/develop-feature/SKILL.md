@@ -1,6 +1,6 @@
 ---
 name: develop-feature
-description: Develop a feature from a scrumboard user story. Fetches the story with get-user-story, asks implementation questions, implements the change, then tests it with test-userstory.
+description: Develop a feature from a scrumboard user story. Fetches the story with get-user-story, asks implementation questions, implements the change, tests it with test-userstory, then writes and validates a Playwright e2e test with write-e2e-test.
 ---
 
 # Develop Feature
@@ -55,3 +55,16 @@ During implementation:
 Use the `test-user-story` skill with the fetched user story and implemented behavior to validate the feature.
 
 If testing reveals failures, fix the issue and rerun the relevant test flow until the story passes or a blocker is identified.
+
+Retain the following outputs from this step — they are required in Step 6:
+- The numbered test cases derived from the user story.
+- All stable locators, action sequences, and timing observations captured during `playwright-cli` execution.
+
+### Step 6 — Write the e2e test
+
+Use the `write-e2e-test` skill, passing:
+- The test cases produced in Step 5.
+- The Playwright locator and interaction data captured in Step 5.
+- The story name/slug for the spec file name.
+
+The skill will write a Playwright spec in `e2e-tests/tests/`, run it once to validate correctness, fix any failures, and then run it at least 3 more times to confirm it is not flaky before reporting the final result.

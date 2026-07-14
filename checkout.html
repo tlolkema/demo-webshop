@@ -36,6 +36,12 @@
     <main id="main-content" role="main">
       <div class="content-box">
         <h1>Checkout</h1>
+        <div
+          id="smoothieSummary"
+          class="smoothie-summary"
+          style="display: none"
+          aria-label="Smoothie order"
+        ></div>
         <form id="checkoutForm" role="form" aria-label="Checkout form">
           <div class="form-group">
             <label for="name">Name:</label>
@@ -85,6 +91,18 @@
     <script src="banana-checkout.js"></script>
     <script>
       renderBasket();
+      (function () {
+        if (localStorage.getItem("smoothieOption") === "true") {
+          const basket = getBasket();
+          const distinct = new Set(basket).size;
+          const flavour = distinct <= 1 ? "Single flavour smoothie" : "Multi flavour smoothie";
+          const el = document.getElementById("smoothieSummary");
+          if (el) {
+            el.textContent = "\uD83C\uDF79 " + flavour;
+            el.style.display = "block";
+          }
+        }
+      })();
       document.getElementById("checkoutForm").onsubmit = function (e) {
         e.preventDefault();
         document.getElementById("successMsg").style.display = "block";

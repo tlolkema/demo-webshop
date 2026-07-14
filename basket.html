@@ -41,6 +41,28 @@
           id="basketList"
           aria-label="Shopping basket items"
         ></ul>
+        <div
+          id="smoothieToggleContainer"
+          class="smoothie-toggle-container"
+          style="display: none"
+          aria-label="Smoothie option"
+        >
+          <label class="smoothie-switch" for="smoothieToggle">
+            <input
+              type="checkbox"
+              id="smoothieToggle"
+              aria-label="Blend fruits into a smoothie"
+            />
+            <span class="smoothie-slider"></span>
+          </label>
+          <span class="smoothie-label">Blend into a smoothie</span>
+          <span
+            id="smoothieFlavourLabel"
+            class="smoothie-flavour-label"
+            style="display: none"
+            aria-live="polite"
+          ></span>
+        </div>
         <div class="cart-buttons-row" role="group" aria-label="Basket actions">
           <button id="clearBasket" aria-label="Clear all items from basket">
             Clear Basket
@@ -71,6 +93,10 @@
         clearBasket();
         renderBasket();
       };
+      document.getElementById("smoothieToggle").addEventListener("change", function () {
+        setSmoothieOption(this.checked);
+        renderBasket();
+      });
     </script>
   </body>
 </html>
