@@ -21,6 +21,27 @@ test("should add a product to the basket", async ({ page }) => {
   });
 });
 
+test("should combine identical products into a single line item", async ({ page }) => {
+  await test.step("Given the shopper adds Apple twice and Banana once", async () => {
+    await page.goto("/product-apple.html");
+    await page.getByRole("button", { name: "Add Apple to basket" }).click();
+    await page.getByRole("button", { name: "Add Apple to basket" }).click();
+    await page.goto("/product-banana.html");
+    await page.getByRole("button", { name: "Add Banana to basket" }).click();
+  });
+
+  await test.step("When the shopper views the basket", async () => {
+    await page.goto("/basket.html");
+  });
+
+  await test.step("Then identical products are grouped with a quantity", async () => {
+    const items = page.getByRole("list", { name: "Shopping basket items" }).getByRole("listitem");
+    await expect(items).toHaveCount(2);
+    await expect(items.nth(0)).toContainText("2x Apple");
+    await expect(items.nth(1)).toContainText("1x Banana");
+  });
+});
+
 test("should remove a product from the basket", async ({ page }) => {
   await test.step("Given Apple is in the shopper's basket", async () => {
     await page.goto("/product-apple.html");
