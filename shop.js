@@ -26,6 +26,12 @@ function clearBasket() {
   localStorage.removeItem("basket");
 }
 
+function removeFromBasket(index) {
+  const basket = getBasket();
+  basket.splice(index, 1);
+  localStorage.setItem("basket", JSON.stringify(basket));
+}
+
 function renderBasket() {
   const basket = getBasket();
   const basketList = document.getElementById("basketList");
@@ -37,11 +43,17 @@ function renderBasket() {
     if (cartButtonsRow) cartButtonsRow.style.display = "none";
     return;
   }
-  basket.forEach((product) => {
+  basket.forEach((product, index) => {
     const item = PRODUCTS[product];
     if (item) {
       const li = document.createElement("li");
-      li.innerHTML = `<span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span>`;
+      li.className = "basket-item";
+      li.innerHTML = `<span class='basket-item-details'><span class='basket-emoji'>${item.emoji}</span> <span>${item.name}</span></span><button class='remove-item-btn' aria-label='Remove ${item.name} from basket'>&minus;</button>`;
+      li.querySelector(".remove-item-btn").onclick = function () {
+        removeFromBasket(index);
+        renderBasket();
+        renderBasketIndicator();
+      };
       basketList.appendChild(li);
     }
   });
