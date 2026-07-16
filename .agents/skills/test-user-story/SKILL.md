@@ -129,7 +129,7 @@ After executing the testcases report in the following format.
 | 1   | Step description | PASS   | 01-step-name.webm |
 | 2   | Step description | PASS   | 02-step-name.png |
 
-**AI report:** file://<absolute-path-to>/ai-evidence/<story-name>/index.html
+**AI report:** [Open report](file://<absolute-path-to>/ai-evidence/<story-name>/index.html)
 ```
 
 ### On failure
@@ -156,5 +156,5 @@ After executing the testcases report in the following format.
 ### Console Errors
 <JS console errors captured at time of failure>
 
-**AI report:** file://<absolute-path-to>/ai-evidence/<story-name>/index.html
+**AI report:** [Open report](file://<absolute-path-to>/ai-evidence/<story-name>/index.html)
 ```
