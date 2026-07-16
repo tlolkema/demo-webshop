@@ -109,6 +109,12 @@ Before reporting completion, validate the generated report:
 - No `{{PLACEHOLDER}}` tokens remain in `index.html`.
 - All referenced evidence files exist next to `index.html`.
 
+After validation, open the generated report in the default browser:
+
+```bash
+node -e "const{execSync}=require('child_process');const c=process.platform;const r='ai-evidence/<story-name>/index.html';execSync(c==='win32'?'start \"\" \"'+r+'\"':c==='darwin'?'open '+r:'xdg-open '+r,{cwd:process.cwd()})"
+```
+
 ### Step 4 — Report status to user
 
 ## Report
@@ -129,7 +135,7 @@ After executing the testcases report in the following format.
 | 1   | Step description | PASS   | 01-step-name.webm |
 | 2   | Step description | PASS   | 02-step-name.png |
 
-**AI report:** [Open report](file://<absolute-path-to>/ai-evidence/<story-name>/index.html)
+**AI report:** file://<absolute-path-to>/ai-evidence/<story-name>/index.html
 ```
 
 ### On failure
@@ -156,5 +162,5 @@ After executing the testcases report in the following format.
 ### Console Errors
 <JS console errors captured at time of failure>
 
-**AI report:** [Open report](file://<absolute-path-to>/ai-evidence/<story-name>/index.html)
+**AI report:** file://<absolute-path-to>/ai-evidence/<story-name>/index.html
 ```
