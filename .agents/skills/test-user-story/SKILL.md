@@ -1,5 +1,5 @@
 ---
-name: test-userstory
+name: test-user-story
 description: Test a user story using the 'playwright-cli' skill. Trigger when user asks to test a user story or wants to verify local development changes.
 allowed-tools: Bash
 ---
