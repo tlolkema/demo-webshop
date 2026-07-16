@@ -160,11 +160,34 @@
         background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%);
       }
 
+      .evidence-play-overlay {
+        transition: opacity 150ms ease, visibility 150ms ease;
+      }
+
+      .video-playing .evidence-play-overlay {
+        opacity: 0;
+        visibility: hidden;
+      }
+
       video,
       img.evidence-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
+      }
+
+      video.evidence-video {
+        display: block;
+        background-color: #000;
+      }
+
+      video.evidence-video:fullscreen {
+        background-color: #000;
+        object-fit: contain;
+      }
+
+      video.evidence-video::backdrop {
+        background-color: #000;
       }
     </style>
   </head>
@@ -239,9 +262,9 @@
         <!-- Evidence Side -->
         <div class="lg:w-1/3 p-6 bg-surface-container-low flex flex-col">
           <h4 class="font-label-caps text-label-caps text-on-surface-variant mb-4">EVIDENCE</h4>
-          <div class="relative aspect-video bg-black overflow-hidden group cursor-pointer border border-outline-variant">
+          <div class="evidence-player relative aspect-video bg-black overflow-hidden group cursor-pointer border border-outline-variant">
             {{EVIDENCE_MEDIA}}
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none {{EVIDENCE_PLAY_ICON_VISIBILITY}}">
+            <div class="evidence-play-overlay absolute inset-0 flex items-center justify-center pointer-events-none {{EVIDENCE_PLAY_ICON_VISIBILITY}}">
               <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span class="material-symbols-outlined text-white" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
               </div>
@@ -262,7 +285,7 @@
     </template>
 
     <template id="video-evidence-template">
-      <video class="opacity-90" controls preload="metadata" src="{{EVIDENCE_SRC}}"></video>
+      <video class="evidence-video" controls preload="auto" playsinline src="{{EVIDENCE_SRC}}"></video>
     </template>
 
     <template id="image-evidence-template">
@@ -304,6 +327,21 @@
           card.style.transform = "translateY(0)";
           card.style.boxShadow = "none";
         });
+      });
+
+      document.querySelectorAll("video.evidence-video").forEach((video) => {
+        const player = video.closest(".evidence-player");
+        if (!player) return;
+
+        const updatePlaybackState = () => {
+          player.classList.toggle("video-playing", !video.paused && !video.ended);
+        };
+
+        video.addEventListener("play", updatePlaybackState);
+        video.addEventListener("playing", updatePlaybackState);
+        video.addEventListener("pause", updatePlaybackState);
+        video.addEventListener("ended", updatePlaybackState);
+        updatePlaybackState();
       });
     </script>
   </body>

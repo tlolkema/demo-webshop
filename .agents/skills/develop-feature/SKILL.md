@@ -53,5 +53,3 @@ During implementation:
 ### Step 5 — Test the user story
 
 Use the `test-user-story` skill with the fetched user story and implemented behavior to validate the feature.
-
-If testing reveals failures, fix the issue and rerun the relevant test flow until the story passes or a blocker is identified.
