@@ -41,8 +41,25 @@ const statusClass = (status) => {
   return 'status-badge-skipped';
 };
 
+const evidenceEntries = (testCase) => {
+  const entries = Array.isArray(testCase.evidence) ? testCase.evidence : [testCase.evidence];
+  return entries.filter(Boolean).map((entry) => {
+    if (typeof entry === 'string') return { file: entry, step: '' };
+    if (typeof entry.file !== 'string' || !entry.file || typeof entry.step !== 'string' || !entry.step.trim()) {
+      throw new Error('Evidence objects must contain a filename and a non-empty step name: { file, step }');
+    }
+    return { file: entry.file, step: entry.step.trim() };
+  });
+};
+
+const evidenceFiles = (testCase) => evidenceEntries(testCase).map((entry) => entry.file);
+
+const isVideo = (file) => ['.webm', '.mp4', '.mov'].includes(path.extname(file).toLowerCase());
+
 const evidenceDetails = (testCase, index) => {
-  const evidenceFile = testCase.evidence || '';
+  const entries = evidenceEntries(testCase);
+  const files = entries.map((entry) => entry.file);
+  const evidenceFile = files.join(', ');
   const noEvidence = {
     evidenceFile,
     evidenceMedia: '<div class="w-full h-full flex items-center justify-center text-white/80 font-body-sm">No evidence captured</div>',
@@ -51,22 +68,28 @@ const evidenceDetails = (testCase, index) => {
 
   if (!evidenceFile) return noEvidence;
 
-  const ext = path.extname(evidenceFile).toLowerCase();
-  if (['.webm', '.mp4', '.mov'].includes(ext)) {
-    return {
-      evidenceFile,
-      evidenceMedia: replaceAll(videoTemplate, { '{{EVIDENCE_SRC}}': escapeHtml(evidenceFile) }),
-      playIconVisibility: '',
-    };
+  const screenshots = entries.filter((entry) => !isVideo(entry.file)).map((entry, imageIndex) => ({
+    src: entry.file,
+    step: entry.step,
+    alt: entry.step || `${testCase.name || `Case ${index + 1}`} screenshot ${imageIndex + 1}`,
+  }));
+  const media = files.filter(isVideo).map((file) => replaceAll(videoTemplate, {
+    '{{EVIDENCE_SRC}}': escapeHtml(file),
+  }));
+
+  if (screenshots.length) {
+    media.push(replaceAll(imageTemplate, {
+      '{{EVIDENCE_SRC}}': escapeHtml(screenshots[0].src),
+      '{{EVIDENCE_ALT}}': escapeHtml(screenshots[0].alt),
+      '{{SCREENSHOTS_JSON}}': escapeHtml(JSON.stringify(screenshots)),
+      '{{SCREENSHOT_COUNT}}': String(screenshots.length),
+    }));
   }
 
   return {
     evidenceFile,
-    evidenceMedia: replaceAll(imageTemplate, {
-      '{{EVIDENCE_SRC}}': escapeHtml(evidenceFile),
-      '{{EVIDENCE_ALT}}': escapeHtml(`${testCase.name || `Case ${index + 1}`} evidence`),
-    }),
-    playIconVisibility: 'hidden',
+    evidenceMedia: media.join('\n'),
+    playIconVisibility: screenshots.length || files.length > 1 ? 'hidden' : '',
   };
 };
 
@@ -141,9 +164,10 @@ if (remainingPlaceholders) {
 }
 
 for (const testCase of cases) {
-  if (!testCase.evidence) continue;
-  const evidencePath = path.join(evidenceDir, testCase.evidence);
-  if (!fs.existsSync(evidencePath)) throw new Error(`Referenced evidence file does not exist: ${evidencePath}`);
+  for (const file of evidenceFiles(testCase)) {
+    const evidencePath = path.join(evidenceDir, file);
+    if (!fs.existsSync(evidencePath)) throw new Error(`Referenced evidence file does not exist: ${evidencePath}`);
+  }
 }
 
 fs.writeFileSync(outputPath, report);

@@ -51,6 +51,14 @@ Use this directory for all evidence and the HTML report for the run. Capture onl
 
 Capture evidence for each executed browser flow using the evidence type selected by the user.
 
+If the user selected `screenshots`:
+
+- Capture a screenshot at each meaningful checkpoint in the test case, including any failure state.
+- Store all screenshots for that case in execution order in its `evidence` array as `{ "file": "relative-screenshot.png", "step": "Name of the step shown" }` objects. Always provide the actual step name for each screenshot. Do not guess the step from its position in the array, since not every step has a screenshot.
+- Display the current screenshot's step name only beneath the image in the full-screen picture viewer, never beneath the preview in the general report. The name updates when cycling through images.
+- The HTML report provides a clickable `Screenshots (N)` preview for each case. It opens a full-screen viewer with uncropped images, previous/next buttons, an image counter, and Left/Right arrow-key navigation that wraps around within that case.
+- Images automatically fit the viewer without cropping. Keep only `Close` in the viewer toolbar, with no size toggles or original-image link. Close it using `Close` or Escape; previous/next navigation remains available below the image.
+
 If the user selected `videos`:
 
 1. First explore and execute the complete test case normally with `playwright-cli` to identify stable locators, actions, assertions, and timing.
@@ -89,7 +97,10 @@ Use this JSON shape for `report-data.json`:
       "goal": "Case goal",
       "status": "PASS, FAIL, or SKIPPED",
       "steps": ["Step 1", "Step 2"],
-      "evidence": "relative-evidence-file.webm",
+      "evidence": [
+        { "file": "01-case-start.png", "step": "Step 1" },
+        { "file": "01-case-result.png", "step": "Step 2" }
+      ],
       "failedStep": "Step that failed; only required for FAIL",
       "expected": "Expected result; only required for FAIL",
       "actual": "Actual result; only required for FAIL",
@@ -99,6 +110,8 @@ Use this JSON shape for `report-data.json`:
 }
 ```
 
+The `evidence` field accepts a single relative filename (for example, `"01-case.webm"`), a single `{ "file": "01-case.png", "step": "Step name" }` object, or an array of these entries. Use labeled objects for new screenshot reports. Legacy filename-only screenshots remain supported but have no step caption because their step association is unknown. Keep screenshot arrays in capture order and scoped to their test case. Use an empty array or omit `evidence` when no evidence was captured. Existing single-file video reports remain supported.
+
 Failure details and possible console errors must be stored on the failing test case object so the generated report renders them inside the failed case card, not in a separate section at the bottom of the page.
 
 Use relative paths from `index.html` to the evidence files so the report is portable with its directory.
@@ -107,7 +120,9 @@ Before reporting completion, validate the generated report:
 
 - The `node .agents/skills/test-user-story/references/generate-report.js ...` command completed successfully.
 - No `{{PLACEHOLDER}}` tokens remain in `index.html`.
-- All referenced evidence files exist next to `index.html`.
+- All referenced evidence files, including every entry in each `evidence` array, exist relative to `index.html`.
+- Screenshot previews open the full-screen viewer. For cases with multiple images, previous/next buttons and Left/Right arrow keys cycle through only that case's images; single-image cases disable previous/next buttons.
+- Each labeled screenshot displays the correct step name beneath the image only in the picture viewer, and the caption changes together with the image when navigating. The general report previews must not display step captions.
 
 After validation, open the generated report in the default browser:
 

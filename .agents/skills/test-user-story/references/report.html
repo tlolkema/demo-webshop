@@ -189,6 +189,103 @@
       video.evidence-video::backdrop {
         background-color: #000;
       }
+
+      .screenshot-trigger {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: 0;
+        background: #000;
+        cursor: zoom-in;
+      }
+
+      .screenshot-trigger:focus-visible {
+        outline: 3px solid #60a5fa;
+        outline-offset: -3px;
+      }
+
+      .screenshot-label {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        background: rgb(0 0 0 / 0.75);
+        color: #fff;
+        font: 600 13px/18px Inter, sans-serif;
+      }
+
+      .screenshot-viewer {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+        max-width: none;
+        max-height: none;
+        margin: 0;
+        padding: 16px;
+        border: 0;
+        background: rgb(15 17 21 / 0.97);
+        color: #fff;
+        box-sizing: border-box;
+      }
+
+      .screenshot-viewer[open] {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .screenshot-viewer::backdrop { background: #000; }
+      body:has(.screenshot-viewer[open]) { overflow: hidden; }
+
+      .viewer-toolbar, .viewer-navigation {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .viewer-toolbar { justify-content: space-between; }
+      .viewer-toolbar h2 { margin: 0; font-size: 18px; }
+      .viewer-toolbar div { display: flex; gap: 8px; }
+
+      .screenshot-viewer button {
+        border: 1px solid #64748b;
+        border-radius: 8px;
+        padding: 8px 12px;
+        background: #1e293b;
+        color: #fff;
+        font: inherit;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .screenshot-viewer button:hover { background: #334155; }
+      .screenshot-viewer :focus-visible { outline: 2px solid #60a5fa; outline-offset: 3px; }
+      .screenshot-viewer button:disabled { opacity: 0.4; cursor: default; }
+
+      .viewer-stage {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .viewer-image {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      .viewer-caption { margin: 0; text-align: center; overflow-wrap: anywhere; font-size: 13px; color: #cbd5e1; }
+      .viewer-step { margin: 0; text-align: center; overflow-wrap: anywhere; font-size: 16px; font-weight: 600; }
     </style>
   </head>
   <body class="font-body-md text-body-md min-h-screen">
@@ -227,6 +324,25 @@
       </div>
 
     </main>
+
+    <dialog class="screenshot-viewer" aria-labelledby="viewer-title">
+      <header class="viewer-toolbar">
+        <h2 id="viewer-title">Screenshots</h2>
+        <div>
+          <button type="button" id="viewer-close" aria-label="Close screenshot viewer">Close</button>
+        </div>
+      </header>
+      <div class="viewer-stage">
+        <img class="viewer-image" alt="" />
+      </div>
+      <p class="viewer-step" aria-live="polite" aria-atomic="true" hidden></p>
+      <nav class="viewer-navigation" aria-label="Screenshot navigation">
+        <button type="button" id="viewer-previous" aria-label="Previous screenshot">&#8592; Previous</button>
+        <span id="viewer-counter" role="status" aria-live="polite" aria-atomic="true"></span>
+        <button type="button" id="viewer-next" aria-label="Next screenshot">Next &#8594;</button>
+      </nav>
+      <p class="viewer-caption"></p>
+    </dialog>
 
     <template id="test-case-card-template">
       <article class="bg-surface border border-outline-variant hover:border-primary transition-colors flex flex-col lg:flex-row">
@@ -289,7 +405,10 @@
     </template>
 
     <template id="image-evidence-template">
-      <img class="evidence-image opacity-90 group-hover:scale-105 transition-transform duration-500" src="{{EVIDENCE_SRC}}" alt="{{EVIDENCE_ALT}}" />
+      <button type="button" class="screenshot-trigger" data-screenshots="{{SCREENSHOTS_JSON}}" aria-label="View screenshots ({{SCREENSHOT_COUNT}})">
+        <img class="evidence-image opacity-90 group-hover:scale-105 transition-transform duration-500" src="{{EVIDENCE_SRC}}" alt="{{EVIDENCE_ALT}}" />
+        <span class="screenshot-label">Screenshots ({{SCREENSHOT_COUNT}}) &#8599;</span>
+      </button>
     </template>
 
     <template id="case-failure-details-template">
@@ -317,6 +436,55 @@
     </template>
 
     <script>
+      const viewer = document.querySelector(".screenshot-viewer");
+      const viewerImage = viewer.querySelector(".viewer-image");
+      const viewerStage = viewer.querySelector(".viewer-stage");
+      const counter = document.getElementById("viewer-counter");
+      const previous = document.getElementById("viewer-previous");
+      const next = document.getElementById("viewer-next");
+      let screenshots = [];
+      let currentImage = 0;
+
+      const renderScreenshot = () => {
+        const screenshot = screenshots[currentImage];
+        viewerImage.src = screenshot.src;
+        viewerImage.alt = screenshot.alt;
+        const stepCaption = viewer.querySelector(".viewer-step");
+        stepCaption.textContent = screenshot.step || "";
+        stepCaption.hidden = !screenshot.step;
+        counter.textContent = `${currentImage + 1} / ${screenshots.length}`;
+        viewer.querySelector(".viewer-caption").textContent = screenshot.src;
+        previous.disabled = next.disabled = screenshots.length < 2;
+        viewerStage.scrollTop = viewerStage.scrollLeft = 0;
+      };
+
+      const cycleScreenshot = (direction) => {
+        currentImage = (currentImage + direction + screenshots.length) % screenshots.length;
+        renderScreenshot();
+      };
+
+      document.querySelectorAll(".screenshot-trigger").forEach((trigger) => {
+        trigger.addEventListener("click", () => {
+          screenshots = JSON.parse(trigger.dataset.screenshots);
+          currentImage = 0;
+          renderScreenshot();
+          viewer.showModal();
+          document.getElementById("viewer-close").focus();
+        });
+      });
+
+      previous.addEventListener("click", () => cycleScreenshot(-1));
+      next.addEventListener("click", () => cycleScreenshot(1));
+      document.getElementById("viewer-close").addEventListener("click", () => viewer.close());
+      viewer.addEventListener("click", (event) => {
+        if (event.target === viewer) viewer.close();
+      });
+      viewer.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        event.preventDefault();
+        cycleScreenshot(event.key === "ArrowLeft" ? -1 : 1);
+      });
+
       // Simple micro-interaction for rows
       document.querySelectorAll("article").forEach((card) => {
         card.addEventListener("mouseenter", () => {
