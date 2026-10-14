@@ -51,6 +51,13 @@ Use this directory for all evidence and the HTML report for the run. Capture onl
 
 Capture evidence for each executed browser flow using the evidence type selected by the user.
 
+For every screenshot, including screenshots captured as fallback evidence:
+
+- Identify all elements needed to demonstrate the checkpoint's action and expected or actual result, including relevant inputs, messages, totals, and surrounding context. Frame the capture around those elements, not merely the top of the page or the current viewport.
+- Wait for the relevant UI to finish rendering, then scroll the relevant elements into view. Use a viewport or element screenshot only when it includes all relevant information without clipping or hiding it.
+- If relevant content extends beyond the viewport, capture a full-page screenshot using `playwright-cli run-code "async page => { await page.screenshot({ path: 'ai-evidence/<story-name>/<screenshot-name>.png', fullPage: true }); }"`. Full-page capture does not reveal content hidden inside independently scrollable panels; scroll those panels as needed. If one image cannot show all relevant information legibly, take complementary screenshots for the same checkpoint and label each with the step name and the view shown.
+- Inspect every saved image before adding it to the report. Confirm that all relevant elements are visible, readable, and not clipped or obscured by overlays or sticky headers. If evidence is incomplete, adjust the framing and retake it. Do not change the tested state or dismiss a relevant failure message just to improve the image.
+
 If the user selected `screenshots`:
 
 - Capture a screenshot at each meaningful checkpoint in the test case, including any failure state.
@@ -121,6 +128,7 @@ Before reporting completion, validate the generated report:
 - The `node .agents/skills/test-user-story/references/generate-report.js ...` command completed successfully.
 - No `{{PLACEHOLDER}}` tokens remain in `index.html`.
 - All referenced evidence files, including every entry in each `evidence` array, exist relative to `index.html`.
+- Each screenshot, or complementary set for the same checkpoint, visibly includes all information relevant to its labeled test step. Reject top-of-page-only or clipped captures that omit the elements being tested.
 - Screenshot previews open the full-screen viewer. For cases with multiple images, previous/next buttons and Left/Right arrow keys cycle through only that case's images; single-image cases disable previous/next buttons.
 - Each labeled screenshot displays the correct step name beneath the image only in the picture viewer, and the caption changes together with the image when navigating. The general report previews must not display step captions.
 
